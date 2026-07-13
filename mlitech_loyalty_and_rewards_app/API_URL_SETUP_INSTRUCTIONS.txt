@@ -1,0 +1,437 @@
+================================================================================
+  MLITECH LOYALTY APP — API URL & ENVIRONMENT CONFIGURATION INSTRUCTIONS
+================================================================================
+
+This document explains how API base URLs are configured in this project, how
+to run and build the app for each environment, and how to keep production
+URLs out of version control.
+
+Last updated: May 2026
+Flutter version (FVM): 3.41.9 (see .fvmrc)
+
+
+================================================================================
+QUICK START — APK & AAB BUILD COMMANDS
+================================================================================
+
+Every build MUST include --dart-define-from-file (or the app will fail on startup).
+Replace dev.json with staging.json or prod.local.json as needed.
+
+Prerequisite (one time):
+  fvm install && fvm use
+
+
+DEBUG APK (for testing on device — larger, not optimized)
+---------------------------------------------------------
+  fvm flutter build apk --debug \
+    --dart-define-from-file=dart_defines/dev.json
+
+  Output: build/app/outputs/flutter-apk/app-debug.apk
+
+
+RELEASE APK (for sharing / sideload install)
+--------------------------------------------
+  Development server:
+    fvm flutter build apk --release \
+      --dart-define-from-file=dart_defines/dev.json
+
+  Staging server:
+    fvm flutter build apk --release \
+      --dart-define-from-file=dart_defines/staging.json
+
+  Production server (requires dart_defines/prod.local.json — see section 5.2):
+    fvm flutter build apk --release \
+      --dart-define-from-file=dart_defines/prod.local.json
+
+  Output: build/app/outputs/flutter-apk/app-release.apk
+
+  Split per CPU architecture (smaller APKs):
+    fvm flutter build apk --release --split-per-abi \
+      --dart-define-from-file=dart_defines/dev.json
+
+  Output: build/app/outputs/flutter-apk/app-armeabi-v7a-release.apk
+          build/app/outputs/flutter-apk/app-arm64-v8a-release.apk
+          build/app/outputs/flutter-apk/app-x86_64-release.apk
+
+
+AAB — Android App Bundle (for Google Play Store upload)
+-------------------------------------------------------
+  Production (recommended for Play Store):
+    fvm flutter build appbundle --release \
+      --dart-define-from-file=dart_defines/prod.local.json
+
+  Development / staging (testing only):
+    fvm flutter build appbundle --release \
+      --dart-define-from-file=dart_defines/dev.json
+
+  Output: build/app/outputs/bundle/release/app-release.aab
+
+
+Without FVM, replace "fvm flutter" with "flutter" in all commands above.
+
+More details: section 7 (full build guide) | section 12 (quick reference)
+
+
+================================================================================
+1. OVERVIEW
+================================================================================
+
+Previously, API and socket URLs were hardcoded in:
+  lib/const/app_api_end_point.dart
+
+They are now injected at COMPILE TIME using Flutter's --dart-define mechanism.
+Values are read via:
+
+  String.fromEnvironment('API_BASE_URL')
+  String.fromEnvironment('SOCKET_BASE_URL')
+  String.fromEnvironment('APP_ENV')
+
+Important:
+  - URLs are fixed when the app is built or run, NOT at runtime.
+  - Changing a JSON file requires a full restart (stop app, run again).
+  - Hot reload may NOT pick up URL changes.
+  - If you run without passing defines, the app throws a clear error on startup.
+
+
+================================================================================
+2. HOW IT WORKS IN CODE
+================================================================================
+
+File: lib/const/app_api_end_point.dart
+
+Compile-time variables:
+  API_BASE_URL     — Server origin (scheme + host, optional port). No trailing
+                     slash. Example: https://api.example.com
+  SOCKET_BASE_URL  — WebSocket / real-time server origin. Optional; if empty,
+                     API_BASE_URL is used for sockets too.
+  APP_ENV          — Label only: development | staging | production
+                     Default: development
+
+Derived values used by the app:
+  AppApiEndPoint.domain
+      → Normalized API_BASE_URL (trailing slashes removed)
+
+  AppApiEndPoint.instance.baseUrl
+      → {domain}/api/v1  (used by Dio HTTP client)
+
+  AppApiEndPoint.instance.socketGetPopupResponse
+      → SOCKET_BASE_URL if set, otherwise same as domain
+
+  AppApiEndPoint.appEnv
+      → Value of APP_ENV define
+
+Image URLs and static assets across the app use:
+  AppApiEndPoint.domain + relative path
+  (e.g. profile photos, merchant images)
+
+No code changes are needed in repositories or screens — they already use
+AppApiEndPoint.instance and AppApiEndPoint.domain.
+
+
+================================================================================
+3. PROJECT FILE STRUCTURE
+================================================================================
+
+dart_defines/
+  dev.json                  — Development URLs (committed to git)
+  staging.json              — Staging URLs (committed to git)
+  prod.local.json.example   — Template for production (committed)
+  prod.local.json           — YOUR real production URLs (NOT in git)
+
+lib/const/
+  app_api_end_point.dart    — Reads compile-time defines
+
+.vscode/
+  launch.json               — Cursor / VS Code run configurations
+
+.gitignore
+  Ignores: dart_defines/prod.local.json
+
+
+================================================================================
+4. ENVIRONMENT CONFIG FILES (JSON)
+================================================================================
+
+Each file is a flat JSON object. Keys become --dart-define names.
+
+Example (dart_defines/dev.json):
+{
+  "API_BASE_URL": "https://mlitech.thepigeonhub.com",
+  "SOCKET_BASE_URL": "https://mlitech.thepigeonhub.com",
+  "APP_ENV": "development"
+}
+
+Rules for URLs:
+  - Include scheme: https:// or http://
+  - Do NOT add /api/v1 — the app appends that automatically
+  - Do NOT end with a trailing slash (the app strips it if present)
+  - Use the origin only: https://host:port
+
+When API and socket are on the same host:
+  Set both API_BASE_URL and SOCKET_BASE_URL to the same value.
+
+When socket is on a different host:
+  Set SOCKET_BASE_URL to the socket server origin only.
+
+
+================================================================================
+5. ONE-TIME SETUP
+================================================================================
+
+5.1 Install Flutter (this project uses FVM)
+-------------------------------------------
+  fvm install
+  fvm use
+
+Verify:
+  fvm flutter --version
+
+5.2 Production local file (only if you need to run production locally)
+----------------------------------------------------------------------
+  cp dart_defines/prod.local.json.example dart_defines/prod.local.json
+
+Edit dart_defines/prod.local.json and replace placeholder URLs with your real
+production API and socket origins.
+
+Never commit prod.local.json — it is listed in .gitignore.
+
+
+================================================================================
+6. RUNNING THE APP
+================================================================================
+
+IMPORTANT: You MUST pass environment defines on every run and build.
+           Running plain "flutter run" without defines will FAIL with:
+           "API_BASE_URL is not set ..."
+
+
+6.1 Using Cursor or VS Code (recommended)
+-----------------------------------------
+  1. Open Run and Debug panel (sidebar) or press F5.
+  2. Select a configuration from the dropdown:
+       - Development          → dart_defines/dev.json
+       - Staging              → dart_defines/staging.json
+       - Production (local)   → dart_defines/prod.local.json
+  3. Press Run / F5.
+
+Configurations are defined in: .vscode/launch.json
+
+
+6.2 Using terminal — Development
+--------------------------------
+  fvm flutter run --dart-define-from-file=dart_defines/dev.json
+
+Without FVM:
+  flutter run --dart-define-from-file=dart_defines/dev.json
+
+
+6.3 Using terminal — Staging
+----------------------------
+  fvm flutter run --dart-define-from-file=dart_defines/staging.json
+
+
+6.4 Using terminal — Production (local file)
+--------------------------------------------
+  fvm flutter run --dart-define-from-file=dart_defines/prod.local.json
+
+Requires prod.local.json to exist (see section 5.2).
+
+
+6.5 Run on a specific device
+----------------------------
+  fvm flutter devices
+  fvm flutter run -d <device_id> --dart-define-from-file=dart_defines/dev.json
+
+Examples:
+  fvm flutter run -d chrome --dart-define-from-file=dart_defines/dev.json
+  fvm flutter run -d emulator-5554 --dart-define-from-file=dart_defines/dev.json
+
+
+6.6 Passing defines manually (without JSON file)
+------------------------------------------------
+  fvm flutter run \
+    --dart-define=API_BASE_URL=https://mlitech.thepigeonhub.com \
+    --dart-define=SOCKET_BASE_URL=https://mlitech.thepigeonhub.com \
+    --dart-define=APP_ENV=development
+
+Use this in CI/CD when URLs come from environment variables.
+
+
+================================================================================
+7. BUILDING RELEASE ARTIFACTS
+================================================================================
+
+7.1 Android APK — Development
+-----------------------------
+  fvm flutter build apk --dart-define-from-file=dart_defines/dev.json
+
+7.2 Android APK — Staging
+-------------------------
+  fvm flutter build apk --dart-define-from-file=dart_defines/staging.json
+
+7.3 Android APK — Production (local secrets file)
+-------------------------------------------------
+  fvm flutter build apk --release \
+    --dart-define-from-file=dart_defines/prod.local.json
+
+7.4 Android App Bundle (Play Store)
+----------------------------------
+  fvm flutter build appbundle --release \
+    --dart-define-from-file=dart_defines/prod.local.json
+
+7.5 iOS
+-------
+  fvm flutter build ios --release \
+    --dart-define-from-file=dart_defines/prod.local.json
+
+Then archive and upload via Xcode as usual.
+
+
+================================================================================
+8. CI/CD (GitHub Actions, Codemagic, Bitrise, etc.)
+================================================================================
+
+Do NOT store production URLs in the repository.
+
+1. Add secrets in your CI provider, for example:
+     PROD_API_BASE_URL     = https://your-production-api.com
+     PROD_SOCKET_BASE_URL  = https://your-production-api.com
+
+2. Pass them at build time:
+
+   fvm flutter build apk --release \
+     --dart-define=API_BASE_URL=$PROD_API_BASE_URL \
+     --dart-define=SOCKET_BASE_URL=$PROD_SOCKET_BASE_URL \
+     --dart-define=APP_ENV=production
+
+GitHub Actions example (conceptual):
+
+   env:
+     API_BASE_URL: ${{ secrets.PROD_API_BASE_URL }}
+     SOCKET_BASE_URL: ${{ secrets.PROD_SOCKET_BASE_URL }}
+   run: |
+     fvm flutter build apk --release \
+       --dart-define=API_BASE_URL=$API_BASE_URL \
+       --dart-define=SOCKET_BASE_URL=$SOCKET_BASE_URL \
+       --dart-define=APP_ENV=production
+
+
+================================================================================
+9. CHANGING URLs FOR AN ENVIRONMENT
+================================================================================
+
+Development:
+  Edit dart_defines/dev.json → save → stop app → run again with dev.json
+
+Staging:
+  Edit dart_defines/staging.json → save → stop app → run again with staging.json
+
+Production:
+  Edit dart_defines/prod.local.json (local only, not in git)
+  OR update CI/CD secrets for automated builds
+
+After editing JSON files, always do a full restart, not just hot reload.
+
+
+================================================================================
+10. SECURITY NOTES
+================================================================================
+
+  - dart_defines/dev.json and staging.json may contain non-production URLs;
+    they are safe to commit if those servers are not secret.
+
+  - Never commit dart_defines/prod.local.json (gitignored).
+
+  - --dart-define values are embedded in the compiled app. They are NOT
+    fully hidden from reverse engineering. Do not treat the mobile app as a
+    secure place for API keys or secrets — only base URLs.
+
+  - For true secrets (API keys, private tokens), use a backend proxy or
+    secure storage — not dart-define.
+
+  - Code obfuscation (--obfuscate) hides Dart symbol names but does not
+    remove URL strings from the binary.
+
+
+================================================================================
+11. TROUBLESHOOTING
+================================================================================
+
+Error: "API_BASE_URL is not set"
+  Cause: App was started without --dart-define-from-file or --dart-define.
+  Fix:   Use commands in section 6, or select a launch configuration in IDE.
+
+Wrong server / old URL still used
+  Cause: Hot reload after changing JSON, or old install on device.
+  Fix:   Stop the app completely. Run again with correct JSON file.
+         Uninstall app from device if needed, then reinstall.
+
+Production (local) launch fails
+  Cause: dart_defines/prod.local.json does not exist.
+  Fix:   cp dart_defines/prod.local.json.example dart_defines/prod.local.json
+         Then edit URLs.
+
+Socket connection fails but REST API works
+  Cause: SOCKET_BASE_URL wrong or different from socket server.
+  Fix:   Set SOCKET_BASE_URL in your environment JSON to the socket origin.
+
+Images not loading (broken image URLs)
+  Cause: API_BASE_URL missing scheme or wrong host.
+  Fix:   Ensure API_BASE_URL is full origin: https://your-host.com
+
+fvm: command not found
+  Fix:   Install FVM: https://fvm.app
+         Or use system flutter instead of fvm in all commands.
+
+
+================================================================================
+12. QUICK REFERENCE — MOST USED COMMANDS
+================================================================================
+
+Daily development:
+  fvm flutter run --dart-define-from-file=dart_defines/dev.json
+
+Staging test:
+  fvm flutter run --dart-define-from-file=dart_defines/staging.json
+
+Release APK (production, local secrets):
+  fvm flutter build apk --release \
+    --dart-define-from-file=dart_defines/prod.local.json
+
+List devices:
+  fvm flutter devices
+
+Clean build (if something seems cached):
+  fvm flutter clean
+  fvm flutter pub get
+  fvm flutter run --dart-define-from-file=dart_defines/dev.json
+
+
+================================================================================
+13. ADDING A NEW ENVIRONMENT (e.g. QA)
+================================================================================
+
+  1. Create dart_defines/qa.json with API_BASE_URL, SOCKET_BASE_URL, APP_ENV.
+  2. Add a new entry in .vscode/launch.json:
+       "toolArgs": ["--dart-define-from-file=dart_defines/qa.json"]
+  3. Run with:
+       fvm flutter run --dart-define-from-file=dart_defines/qa.json
+  4. Commit qa.json only if the QA server URL is not sensitive.
+
+
+================================================================================
+14. RELATED FILES IN THIS REPO
+================================================================================
+
+  lib/const/app_api_end_point.dart       — Endpoint paths + URL resolution
+  lib/service/api_service/api.dart       — Dio uses instance.baseUrl
+  lib/service/api_service/non_auth_api.dart
+  dart_defines/*.json                    — Per-environment URL injection
+  .vscode/launch.json                    — IDE run configurations
+  .gitignore                             — Excludes prod.local.json
+  .fvmrc                                 — Flutter SDK version for FVM
+
+
+================================================================================
+END OF DOCUMENT
+================================================================================

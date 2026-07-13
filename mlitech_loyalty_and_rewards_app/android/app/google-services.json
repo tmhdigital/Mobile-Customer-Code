@@ -1,0 +1,54 @@
+{
+  "project_info": {
+    "project_number": "593611426236",
+    "project_id": "miltech-c3007",
+    "storage_bucket": "miltech-c3007.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:593611426236:android:9cd87a5138257a308083b9",
+        "android_client_info": {
+          "package_name": "com.miltech.miltech"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "593611426236-epbob3ebnf6cjgdi4003jabfbkcbgjq5.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.miltech.miltech",
+            "certificate_hash": "39c5394c83700f7931556a54ae0ed0f6805ffd6f"
+          }
+        },
+        {
+          "client_id": "593611426236-c0aqlvlgbg1jnd5lm3tjmnqjurevdljh.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDJfpx_mBJdtDgsTmd9JppVjsxpt95fj3w"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "593611426236-c0aqlvlgbg1jnd5lm3tjmnqjurevdljh.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "593611426236-vdp2b9v965bhqdmii1bncssa6nsiuot4.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.miltech.miltech"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

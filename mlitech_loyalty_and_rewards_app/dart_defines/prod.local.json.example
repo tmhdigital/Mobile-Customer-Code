@@ -1,0 +1,5 @@
+{
+  "API_BASE_URL": "https://your-production-api.example.com",
+  "SOCKET_BASE_URL": "https://your-production-api.example.com",
+  "APP_ENV": "production"
+}

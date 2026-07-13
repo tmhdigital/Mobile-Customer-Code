@@ -1,0 +1,71 @@
+import 'dart:convert';
+
+class MerchantModel {
+    bool? success;
+    String? message;
+    List<MerchantModelData>? data;
+
+    MerchantModel({
+        this.success,
+        this.message,
+        this.data,
+    });
+
+    factory MerchantModel.fromRawJson(String str) => MerchantModel.fromJson(json.decode(str));
+
+    String toRawJson() => json.encode(toJson());
+
+    factory MerchantModel.fromJson(Map<String, dynamic> json) => MerchantModel(
+        success: json["success"],
+        message: json["message"],
+        data: json["data"] == null ? [] : List<MerchantModelData>.from(json["data"]!.map((x) => MerchantModelData.fromJson(x))),
+    );
+
+    Map<String, dynamic> toJson() => {
+        "success": success,
+        "message": message,
+        "data": data == null ? [] : List<dynamic>.from(data!.map((x) => x.toJson())),
+    };
+}
+
+class MerchantModelData {
+    String? id;
+    int? totalRatings;
+    double? avgRating;
+    String? firstName;
+    String? email;
+    String? profile;
+
+    MerchantModelData({
+        this.id,
+        this.totalRatings,
+        this.avgRating,
+        this.firstName,
+        this.email,
+        this.profile,
+    });
+
+    factory MerchantModelData.fromRawJson(String str) => MerchantModelData.fromJson(json.decode(str));
+
+    String toRawJson() => json.encode(toJson());
+
+    factory MerchantModelData.fromJson(Map<String, dynamic> json) => MerchantModelData(
+        id: json["_id"],
+        totalRatings: json["totalRatings"],
+        avgRating: json["avgRating"]?.toDouble(),
+        firstName: json["firstName"],
+        email: json["email"],
+        profile: json["profile"],
+    );
+
+    Map<String, dynamic> toJson() => {
+        "_id": id,
+        "totalRatings": totalRatings,
+        "avgRating": avgRating,
+        "firstName": firstName,
+        "email": email,
+        "profile": profile,
+    };
+}
+
+
