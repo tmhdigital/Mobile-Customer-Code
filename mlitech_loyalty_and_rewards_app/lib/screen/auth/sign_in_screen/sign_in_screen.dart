@@ -8,6 +8,7 @@ import 'package:loyalty_customer/screen/auth/sign_in_screen/controller/sign_in_c
 import 'package:loyalty_customer/utils/app_size.dart';
 import 'package:loyalty_customer/widget/app_button/app_button.dart';
 import 'package:loyalty_customer/widget/app_image/app_image.dart';
+import 'package:loyalty_customer/widget/app_image/app_image_circular.dart';
 import 'package:loyalty_customer/widget/app_input/app_input_widget_two.dart';
 import 'package:loyalty_customer/widget/app_log/gap.dart';
 import 'package:loyalty_customer/widget/app_text/app_text.dart';
@@ -33,27 +34,29 @@ class SignInScreen extends StatelessWidget {
                       top:
                           AppSize.size.height *
                           0.1, // Ensure that it's horizontally centered
-                      child: Center(
-                        // Center the text horizontally
-                        child: AppText(
-                          data: "Welcome Back!",
-                          fontSize: AppSize.width(value: 40),
-                          fontWeight: FontWeight.w700,
-                          color: AppColor.button1Light,
-                        ),
+                      child: Column(
+                        children: [
+                          AppText(
+                            data: "Welcome Back!",
+                            fontSize: AppSize.width(value: 40),
+                            fontWeight: FontWeight.w700,
+                            color: AppColor.button1Light,
+                          ),
+                        ],
                       ),
                     ),
                     Positioned(
                       top: AppSize.size.height * 0.2,
                       left: 0,
-                      right: 0, // Ensure that it's horizontally centered
-                      child: Center(
-                        // Center the text horizontally
-                        child: AppText(
-                          data: "Logo",
-                          fontSize: AppSize.width(value: 80),
-                          fontWeight: FontWeight.w600,
-                          color: AppColor.button1Light,
+                      right: 0,
+                      child: Align(
+                        alignment: Alignment.center,
+                        child: SizedBox(
+                          width: 240,
+                          height: 90,
+                          child: AppImageCircular(
+                            path: "assets/images/rewaldo-logo-white.png",
+                          ),
                         ),
                       ),
                     ),

@@ -37,7 +37,7 @@ RELEASE APK (for sharing / sideload install)
 
   Staging server:
     fvm flutter build apk --release \
-      --dart-define-from-file=dart_defines/staging.json
+      --dart-define-from-file=dart_defines/sgitang.json
 
   Production server (requires dart_defines/prod.local.json — see section 5.2):
     fvm flutter build apk --release \

@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:loyalty_customer/routes/app_routes.dart';
 import 'package:loyalty_customer/screen/profile_section/profile_screen/model/profile_model.dart';
@@ -10,10 +9,7 @@ class SplashController extends GetxController {
   final GetStorageServices storageServices = GetStorageServices.instance;
   final GetRepository getRepository = GetRepository.instance;
 
-  // রিঅ্যাক্টিভ ভেরিয়েবলস
   Rxn<ProfileModelData> profileModelData = Rxn<ProfileModelData>();
-  RxDouble animation = 0.0.obs;
-  RxDouble animation2 = 0.0.obs;
 
   @override
   void onInit() {
@@ -23,24 +19,14 @@ class SplashController extends GetxController {
 
   Future<void> onInitialDataLoadScreen() async {
     try {
-      // ১. এনিমেশন শুরু (সামান্য ডিলে দিয়ে যাতে স্মুথ হয়)
-      Future.delayed(Durations.medium1, () {
-        animation.value = 1.0;
-        animation2.value = 1.0;
-      });
-
-      // ২. টাইমার এবং API কল দুটি একসাথে সম্পন্ন হওয়া পর্যন্ত অপেক্ষা করবে
-      // এটি নিশ্চিত করবে যে এনিমেশন দেখার জন্য অন্তত ৩ সেকেন্ড সময় পাবে এবং ডেটাও লোড হবে
       await Future.wait([
         Future.delayed(const Duration(seconds: 3)),
         _fetchInitialData(),
       ]);
 
-      // ৩. সব ডেটা লোড হওয়ার পর নেভিগেশন ডিসিশন নেওয়া হবে
       _handleNavigation();
     } catch (e) {
       AppPrint.appError(e, title: "onInitialDataLoadScreen");
-      // এরর হলে অনবোর্ডিং স্ক্রিনে পাঠিয়ে দেওয়া নিরাপদ
       Get.offAllNamed(AppRoutes.instance.onBoardingScreen);
     }
   }

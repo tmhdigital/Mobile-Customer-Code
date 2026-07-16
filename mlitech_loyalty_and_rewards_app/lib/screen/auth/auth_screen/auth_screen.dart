@@ -8,6 +8,7 @@ import 'package:loyalty_customer/screen/auth/auth_screen/controller/auth_control
 import 'package:loyalty_customer/utils/app_size.dart';
 import 'package:loyalty_customer/widget/app_button/app_button.dart';
 import 'package:loyalty_customer/widget/app_image/app_image.dart';
+import 'package:loyalty_customer/widget/app_image/app_image_circular.dart';
 import 'package:loyalty_customer/widget/app_log/gap.dart';
 import 'package:loyalty_customer/widget/app_snackbar/app_snack_bar.dart';
 import 'package:loyalty_customer/widget/app_text/app_text.dart';
@@ -31,12 +32,12 @@ class AuthScreen extends StatelessWidget {
                 child: Column(
                   spacing: AppSize.width(value: 8),
                   children: [
-                    AppText(
-                      data: "Logo",
-                      fontSize: AppSize.width(value: 80),
-                      fontWeight: FontWeight.w600,
-                      color: AppColor.button1Light,
+                    AppImageCircular(
+                      path: "assets/images/rewaldo-logo-white.png",
+                      width: 240,
+                      height: 90,
                     ),
+                    SizedBox(height: AppSize.width(value: 12)),
                     AppText(
                       data: "Let's Get Started!",
                       fontSize: AppSize.width(value: 24),
