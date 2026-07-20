@@ -1,3 +1,6 @@
+import 'dart:convert';
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:loyalty_customer/routes/app_routes.dart';
@@ -154,6 +157,122 @@ class MySubController extends GetxController {
         ),
       )
       ..loadRequest(Uri.parse(url));
+  }
+
+  // -------------- Subscription payment with Kuickpay (local payment method) --------------
+  Future<void> paymentPackageKuickpay({required String packageId}) async {
+    try {
+      isPaymentLoading.value = true;
+      _dialogShown.value = false;
+
+      final response = await _postRepository.kuickpayPaymentPackage(
+        packageId: packageId,
+      );
+
+      final formData = response?.data?.formData;
+      final redirectionUrl = response?.data?.redirectionUrl;
+
+      if (response != null &&
+          response.success == true &&
+          formData != null &&
+          redirectionUrl != null) {
+        _initializeKuickpayWebView(redirectionUrl, formData.toFormMap());
+        AppPrint.appLog(
+          '✅ Kuickpay checkout initiated for order: ${response.data?.orderId}',
+        );
+      } else {
+        _showErrorSnackbar(response?.message ?? 'Failed to start Kuickpay checkout');
+      }
+    } catch (e) {
+      _showErrorSnackbar('An error occurred: $e');
+      AppPrint.appError(e, title: "Kuickpay Payment Package Error");
+    } finally {
+      isPaymentLoading.value = false;
+    }
+  }
+
+  /// Initialize WebView with a POST request carrying the Kuickpay form fields.
+  /// Kuickpay's Hosted Checkout is a form-POST flow, not a plain GET redirect
+  /// like Stripe, so we build and submit the body ourselves via webview_flutter's
+  /// LoadRequestMethod.post support (webview_flutter >= 4.x).
+  void _initializeKuickpayWebView(String url, Map<String, String> formFields) {
+    final body = formFields.entries
+        .map(
+          (e) =>
+              '${Uri.encodeComponent(e.key)}=${Uri.encodeComponent(e.value)}',
+        )
+        .join('&');
+    final bodyBytes = Uint8List.fromList(utf8.encode(body));
+
+    webViewController = WebViewController()
+      ..setJavaScriptMode(JavaScriptMode.unrestricted)
+      ..setNavigationDelegate(
+        NavigationDelegate(
+          onPageStarted: (String url) {
+            AppPrint.appLog('📄 Kuickpay page started loading: $url');
+          },
+          onPageFinished: (String url) {
+            AppPrint.appLog('✅ Kuickpay page finished loading: $url');
+            _checkKuickpayReturn(url);
+          },
+          onNavigationRequest: (NavigationRequest request) {
+            AppPrint.appLog('🔗 Kuickpay navigation to: ${request.url}');
+            return NavigationDecision.navigate;
+          },
+          onWebResourceError: (WebResourceError error) {
+            AppPrint.appError('❌ Kuickpay WebView error: ${error.description}');
+            if (error.errorCode == _kNetworkNotAvailable ||
+                error.errorCode == _kCannotFindHost) {
+              Get.snackbar(
+                'Connection Error',
+                'Please check your internet connection',
+                snackPosition: SnackPosition.BOTTOM,
+                backgroundColor: Colors.red.shade100,
+                colorText: Colors.red.shade900,
+              );
+            }
+          },
+        ),
+      )
+      ..loadRequest(
+        Uri.parse(url),
+        method: LoadRequestMethod.post,
+        headers: const {
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: bodyBytes,
+      );
+  }
+
+  /// Detect our own backend's "/kuickpay/return" bridge page (hit by Kuickpay's
+  /// SuccessUrl/FailureUrl redirect) and show the appropriate result screen.
+  /// Final truth of the payment always comes from the backend (signature-verified
+  /// return + IPN); this only decides which screen to show the user.
+  void _checkKuickpayReturn(String url) {
+    if (_dialogShown.value) return;
+
+    final uri = Uri.tryParse(url);
+    if (uri == null) return;
+
+    if (!uri.path.toLowerCase().contains('kuickpay/return')) return;
+
+    final responseCode = uri.queryParameters['ResponseCode'];
+    _dialogShown.value = true;
+
+    if (responseCode == '00') {
+      debugPrint('🎉 Kuickpay Payment Success Detected: $url');
+      _showSuccessDialog();
+    } else {
+      debugPrint('⚠️ Kuickpay Payment Failed/Cancelled: $url');
+      Get.snackbar(
+        'Payment Failed',
+        'Your Kuickpay payment could not be completed.',
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: Colors.red.shade100,
+        colorText: Colors.red.shade900,
+      );
+      Get.back();
+    }
   }
 
   /// Check if Stripe checkout was successful

@@ -59,6 +59,7 @@ class AppApiEndPoint {
   final String packageList = '/package/active-packages';
   final String sellRequist = '/sell/pending-checkouts';
   final String packagePayment = '/subscription/create';
+  final String kuickpayPackagePayment = '/kuickpay/create';
   final String packageHistory = '/subscription';
   final String favoriteMerchant = '/favorite/add';
   final String notificationRead = '/notifications/read';

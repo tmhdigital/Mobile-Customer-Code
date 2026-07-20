@@ -181,20 +181,18 @@ class MySubScreen extends StatelessWidget {
                                             // Close bottom sheet first
                                             Get.back();
 
-                                            // Initialize payment and get checkout URL
-                                            await controller.paymentPackage(
+                                            // Initialize Kuickpay checkout (local payment method)
+                                            await controller.paymentPackageKuickpay(
                                               packageId: package.id,
                                             );
 
-                                            // Navigate to WebView screen if URL is available
-                                            if (controller
-                                                .stripeUrl
-                                                .value
-                                                .isNotEmpty) {
+                                            // Navigate to WebView screen once it's ready
+                                            if (controller.webViewController !=
+                                                null) {
                                               Get.toNamed(
                                                 AppRoutes
                                                     .instance
-                                                    .stripeCheckoutWebView,
+                                                    .kuickpayCheckoutWebView,
                                               );
                                             }
                                           },

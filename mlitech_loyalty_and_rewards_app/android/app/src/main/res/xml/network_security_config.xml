@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<network-security-config>
+    <!--
+      TEMPORARY, SANDBOX-ONLY WORKAROUND:
+      Kuickpay's hosted checkout 3D-Secure device-fingerprinting step calls
+      http://119.160.107.53:3001/api/v1/ddc/callback (plain HTTP, not HTTPS).
+
+      NOTE: scoping cleartext to a single <domain> IP literal is unreliable
+      across Android versions (the domain matcher is hostname-oriented), so
+      this allows cleartext globally for now to unblock sandbox testing.
+
+      ⚠️ MUST be tightened before production release — either remove this
+      entirely (if Kuickpay fixes their DDC callback to use HTTPS) or scope
+      it properly once confirmed working, e.g. via a <base-config> with a
+      hardcoded IP added to the OS hosts allowlist, or a reverse proxy.
+    -->
+    <base-config cleartextTrafficPermitted="true" />
+</network-security-config>
