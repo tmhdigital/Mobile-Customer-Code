@@ -15,7 +15,7 @@ class MySubScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    
+
     final value = Get.arguments['value'];
     return GetBuilder<MySubController>(
       init: MySubController(),
@@ -72,6 +72,13 @@ class MySubScreen extends StatelessWidget {
               );
             }
 
+            // ListView.builder builds its children lazily, i.e. outside this
+            // Obx's tracking scope. Reading the subscription state here makes
+            // sure the cards re-render (Choose Plan -> Claimed) as soon as a
+            // payment is confirmed.
+            controller.profileValue.value;
+            controller.subSummaryList.value;
+
             return SizedBox(
               height: AppSize.size.height * 0.9,
               child: ListView.builder(
@@ -92,6 +99,7 @@ class MySubScreen extends StatelessWidget {
                         package.price,
                         package.title,
                         index,
+                        packageId: package.id,
                       ),
                       onTap: () {
                         Get.bottomSheet(
@@ -135,7 +143,7 @@ class MySubScreen extends StatelessWidget {
                                   AppText(
                                     textAlign: TextAlign.center,
                                     data:
-                                        "Select your preferred option to complete the transaction.",
+                                    "Select your preferred option to complete the transaction.",
                                     fontSize: AppSize.width(value: 16),
                                     fontWeight: FontWeight.w500,
                                     color: Colors.black,
@@ -161,7 +169,7 @@ class MySubScreen extends StatelessWidget {
                                             ),
                                             decoration: BoxDecoration(
                                               borderRadius:
-                                                  BorderRadius.circular(12),
+                                              BorderRadius.circular(12),
                                               border: Border.all(
                                                 color: AppColor.buttonDark,
                                               ),
@@ -349,17 +357,17 @@ class SubcriptionCard extends StatelessWidget {
                     ),
                     child: isClaimed
                         ? AppButton(
-                            onTap: onTap,
-                            borderRadius: BorderRadius.circular(12),
-                            title: "Choose Plan",
-                          )
+                      onTap: onTap,
+                      borderRadius: BorderRadius.circular(12),
+                      title: "Choose Plan",
+                    )
                         : AppButton(
-                            filColor: AppColor.button5Dark.withValues(
-                              alpha: .1,
-                            ),
-                            borderRadius: BorderRadius.circular(12),
-                            title: "Claimed",
-                          ),
+                      filColor: AppColor.button5Dark.withValues(
+                        alpha: .1,
+                      ),
+                      borderRadius: BorderRadius.circular(12),
+                      title: "Claimed",
+                    ),
                   ),
                 ),
               ],

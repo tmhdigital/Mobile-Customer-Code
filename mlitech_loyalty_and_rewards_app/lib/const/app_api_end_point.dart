@@ -60,6 +60,8 @@ class AppApiEndPoint {
   final String sellRequist = '/sell/pending-checkouts';
   final String packagePayment = '/subscription/create';
   final String kuickpayPackagePayment = '/kuickpay/create';
+  final String kuickpayConfirmPayment = '/kuickpay/confirm';
+  final String kuickpayOrderStatus = '/kuickpay/order';
   final String packageHistory = '/subscription';
   final String favoriteMerchant = '/favorite/add';
   final String notificationRead = '/notifications/read';
@@ -82,8 +84,8 @@ String _normalizeBaseUrl(String raw, {required String name}) {
   if (url.isEmpty) {
     throw StateError(
       '$name is not set. Run with:\n'
-      '  flutter run --dart-define-from-file=dart_defines/dev.json\n'
-      'Or select a launch configuration in VS Code / Cursor.',
+          '  flutter run --dart-define-from-file=dart_defines/dev.json\n'
+          'Or select a launch configuration in VS Code / Cursor.',
     );
   }
   return url.replaceAll(RegExp(r'/+$'), '');

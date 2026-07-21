@@ -234,7 +234,7 @@ class GetRepository {
     required String? type,
   }) async {
     List<TransactionHistoryModelData> transactionHistoryList =
-        <TransactionHistoryModelData>[];
+    <TransactionHistoryModelData>[];
     Map<String, dynamic> data = {};
     if (digitalCardId != null) {
       data["digitalCardId"] = digitalCardId;
@@ -833,7 +833,7 @@ class GetRepository {
 
     return giftCardList;
   }
-  
+
   //--------------Privicy Policy Section--------------
   Future<String?> getRules(String endPoint) async {
     try {
@@ -1059,6 +1059,22 @@ class GetRepository {
     return null;
   }
 
+  /// Poll a Kuickpay order until the backend has it as "completed".
+  /// Used as a fallback while we wait for Kuickpay's server-to-server IPN.
+  Future<String?> getKuickpayOrderStatus({required String orderId}) async {
+    try {
+      final response = await apiServices.apiGetServices(
+        "${AppApiEndPoint.instance.kuickpayOrderStatus}/$orderId",
+      );
+      if (response != null && response["data"] != null) {
+        return response["data"]["status"]?.toString();
+      }
+    } catch (e) {
+      AppPrint.appError(e, title: "Get Kuickpay Order Status Error");
+    }
+    return null;
+  }
+
   Future<ReferralSummaryData?> getReferralSummary() async {
     try {
       final response = await apiServices.apiGetServices(
@@ -1083,7 +1099,7 @@ class GetRepository {
     required String userId,
   }) async {
     List<SubscriptionHistoryModelData> subModelList =
-        <SubscriptionHistoryModelData>[];
+    <SubscriptionHistoryModelData>[];
     try {
       final response = await apiServices.apiGetServices(
         "${AppApiEndPoint.instance.packageHistory}/$userId",

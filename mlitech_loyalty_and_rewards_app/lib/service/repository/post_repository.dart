@@ -279,7 +279,7 @@ class PostRepository {
     try {
       final response = await apiServices.apiPostServices(
         url:
-            "${AppApiEndPoint.instance.approveAndRejectRedemptionRequest}$endPoint",
+        "${AppApiEndPoint.instance.approveAndRejectRedemptionRequest}$endPoint",
         body: {
           "digitalCardCode": digitalCardCode,
           "userId": userId,
@@ -363,6 +363,31 @@ class PostRepository {
       }
     } catch (e) {
       AppPrint.appError(e, title: "kuickpayPaymentPackage");
+      return null;
+    }
+  }
+
+  /// Tell OUR backend that the Kuickpay WebView came back with a result.
+  ///
+  /// Kuickpay's own redirect/IPN can silently fail to reach the server (tunnel
+  /// interstitial pages, unreachable IPN URL, etc). This call is authenticated,
+  /// so the backend can safely activate the subscription for the order that
+  /// belongs to this user. Returns the order status, e.g. "completed".
+  Future<Map<String, dynamic>?> kuickpayConfirmPayment({
+    required Map<String, String> returnParams,
+  }) async {
+    try {
+      final response = await apiServices.apiPostServices(
+        url: AppApiEndPoint.instance.kuickpayConfirmPayment,
+        body: returnParams,
+      );
+      if (response != null) {
+        AppPrint.apiResponse(response, title: "kuickpayConfirmPayment");
+        return Map<String, dynamic>.from(response as Map);
+      }
+      return null;
+    } catch (e) {
+      AppPrint.appError(e, title: "kuickpayConfirmPayment");
       return null;
     }
   }
