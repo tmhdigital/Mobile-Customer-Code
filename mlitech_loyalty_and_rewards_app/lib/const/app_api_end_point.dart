@@ -6,7 +6,12 @@ class AppApiEndPoint {
   static AppApiEndPoint get instance => _instance;
 
   /// Injected at compile time via `--dart-define` or `--dart-define-from-file`.
-  static const String apiBaseUrl = String.fromEnvironment('API_BASE_URL');
+  /// Defaults to the production API so plain `flutter build apk --release`
+  /// (no dart-define flags) works out of the box.
+  static const String apiBaseUrl = String.fromEnvironment(
+    'API_BASE_URL',
+    defaultValue: 'https://api.rewaldo.com',
+  );
 
   /// Defaults to [apiBaseUrl] when not set separately.
   static const String socketBaseUrl = String.fromEnvironment('SOCKET_BASE_URL');
@@ -59,6 +64,9 @@ class AppApiEndPoint {
   final String packageList = '/package/active-packages';
   final String sellRequist = '/sell/pending-checkouts';
   final String packagePayment = '/subscription/create';
+  final String kuickpayPackagePayment = '/kuickpay/create';
+  final String kuickpayConfirmPayment = '/kuickpay/confirm';
+  final String kuickpayOrderStatus = '/kuickpay/order';
   final String packageHistory = '/subscription';
   final String favoriteMerchant = '/favorite/add';
   final String notificationRead = '/notifications/read';
@@ -81,8 +89,8 @@ String _normalizeBaseUrl(String raw, {required String name}) {
   if (url.isEmpty) {
     throw StateError(
       '$name is not set. Run with:\n'
-      '  flutter run --dart-define-from-file=dart_defines/dev.json\n'
-      'Or select a launch configuration in VS Code / Cursor.',
+          '  flutter run --dart-define-from-file=dart_defines/dev.json\n'
+          'Or select a launch configuration in VS Code / Cursor.',
     );
   }
   return url.replaceAll(RegExp(r'/+$'), '');

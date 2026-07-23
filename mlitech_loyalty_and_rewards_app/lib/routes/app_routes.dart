@@ -28,6 +28,7 @@ class AppRoutes {
   final String contactUsScreen = "/contact-us-screen";
   final String mySubScreen = "/my-sub-screen";
   final String stripeCheckoutWebView = "/stripe-checkout-webview";
+  final String kuickpayCheckoutWebView = "/kuickpay-checkout-webview";
   final String termsScreen = "/terms-screen";
   final String privicyScreen = "/privicy-screen";
   final String confirmScreen = "/confirm-screen";
