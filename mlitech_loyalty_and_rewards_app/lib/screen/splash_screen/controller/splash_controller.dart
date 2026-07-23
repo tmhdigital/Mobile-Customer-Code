@@ -1,4 +1,3 @@
-import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:get/get.dart';
 import 'package:loyalty_customer/routes/app_routes.dart';
 import 'package:loyalty_customer/screen/profile_section/profile_screen/model/profile_model.dart';
@@ -10,7 +9,6 @@ class SplashController extends GetxController {
   final GetStorageServices storageServices = GetStorageServices.instance;
   final GetRepository getRepository = GetRepository.instance;
 
-  // রিঅ্যাক্টিভ ভেরিয়েবলস
   Rxn<ProfileModelData> profileModelData = Rxn<ProfileModelData>();
 
   @override
@@ -21,27 +19,19 @@ class SplashController extends GetxController {
 
   Future<void> onInitialDataLoadScreen() async {
     try {
-      // টোকেন থাকলে প্রোফাইল/সাবস্ক্রিপশন ডেটা লোড করবে
-      await _fetchInitialData();
+      await Future.wait([
+        Future.delayed(const Duration(seconds: 3)),
+        _fetchInitialData(),
+      ]);
 
-      // ডেটা লোড হওয়ার পর নেভিগেশন ডিসিশন নেওয়া হবে
       _handleNavigation();
     } catch (e) {
       AppPrint.appError(e, title: "onInitialDataLoadScreen");
-      // এরর হলে অনবোর্ডিং স্ক্রিনে পাঠিয়ে দেওয়া নিরাপদ
-      _navigateTo(AppRoutes.instance.onBoardingScreen);
+      Get.offAllNamed(AppRoutes.instance.onBoardingScreen);
     }
   }
 
-  /// Removes the native splash screen (kept alive since app launch) right
-  /// before handing off to the resolved first screen, so only one splash
-  /// is ever visible to the user.
-  void _navigateTo(String route, {Object? arguments}) {
-    FlutterNativeSplash.remove();
-    Get.offAllNamed(route, arguments: arguments);
-  }
-
-  // টোকেন থাকলে প্রোফাইল ডেটা নিয়ে আসার ফাংশন
+  // টোকেন থাকলে প্রোফাইল ডেটা নিয়ে আসার ফাংশন
   Future<void> _fetchInitialData() async {
     final String token = storageServices.getToken();
     if (token.isNotEmpty) {
@@ -56,9 +46,9 @@ class SplashController extends GetxController {
     // টোকেন না থাকলে সরাসরি অনবোর্ডিং
     if (token.isEmpty) {
       if (storageServices.getIsUserFirstTime() == true) {
-        _navigateTo(AppRoutes.instance.authScreen);
+        Get.offAllNamed(AppRoutes.instance.authScreen);
       } else {
-        _navigateTo(AppRoutes.instance.onBoardingScreen);
+        Get.offAllNamed(AppRoutes.instance.onBoardingScreen);
       }
       return;
     }
@@ -72,22 +62,22 @@ class SplashController extends GetxController {
         data.location!.coordinates!.any((e) => e == 0.0 || e == null);
 
     if (isLocationEmpty) {
-      _navigateTo(AppRoutes.instance.locationScreen);
+      Get.offAllNamed(AppRoutes.instance.locationScreen);
       return;
     }
 
-    // ২. ইউজার ওয়েটিং লিস্টে আছে কিনা
+    // ২. ইউজার ওয়েটিং লিস্টে আছে কিনা
     if (data.isUserWaiting == true) {
-      _navigateTo(AppRoutes.instance.waitingScreen);
+      Get.offAllNamed(AppRoutes.instance.waitingScreen);
       return;
     }
 
     // ৩. সাবস্ক্রিপশন চেক
     if (data?.subscription == "active") {
-      _navigateTo(AppRoutes.instance.navigationScreen);
+      Get.offAllNamed(AppRoutes.instance.navigationScreen);
     } else {
       // সাবস্ক্রিপশন একটিভ না থাকলে পেমেন্ট/সাবস্ক্রিপশন স্ক্রিন
-      _navigateTo(AppRoutes.instance.mySubScreen, arguments: {'value': 1});
+      Get.offAllNamed(AppRoutes.instance.mySubScreen, arguments: {'value': 1});
     }
   }
 
@@ -107,3 +97,5 @@ class SplashController extends GetxController {
     }
   }
 }
+
+

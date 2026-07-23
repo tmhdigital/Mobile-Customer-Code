@@ -1,15 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:loyalty_customer/const/app_color.dart';
 import 'package:loyalty_customer/const/app_const.dart';
 import 'package:loyalty_customer/const/assets_icons_path.dart';
 import 'package:loyalty_customer/routes/app_routes.dart';
 import 'package:loyalty_customer/screen/auth/sign_up_screen/controller/signup_controller.dart';
-import 'package:loyalty_customer/screen/auth/sign_up_screen/model/country_model.dart';
 import 'package:loyalty_customer/utils/app_size.dart';
 import 'package:loyalty_customer/widget/app_button/app_button.dart';
 import 'package:loyalty_customer/widget/app_image/app_image.dart';
+import 'package:loyalty_customer/widget/app_image/app_image_circular.dart';
 import 'package:loyalty_customer/widget/app_input/app_input_widget_two.dart';
 import 'package:loyalty_customer/widget/app_input/country_city_dropdown.dart';
 import 'package:loyalty_customer/widget/app_input/email_and_phone_field.dart';
@@ -59,14 +58,15 @@ class SignUpScreen extends StatelessWidget {
                     Positioned(
                       top: AppSize.size.height * 0.2,
                       left: 0,
-                      right: 0, // Ensure that it's horizontally centered
-                      child: Center(
-                        // Center the text horizontally
-                        child: AppText(
-                          data: "Logo",
-                          fontSize: AppSize.width(value: 80),
-                          fontWeight: FontWeight.w600,
-                          color: AppColor.button1Light,
+                      right: 0,
+                      child: Align(
+                        alignment: Alignment.center,
+                        child: SizedBox(
+                          width: 240,
+                          height: 90,
+                          child: AppImageCircular(
+                            path: "assets/images/rewaldo-logo-white.png",
+                          ),
                         ),
                       ),
                     ),
@@ -142,7 +142,6 @@ class SignUpScreen extends StatelessWidget {
                                 controller.cityController.text = city ?? "";
                               },
                             ),
-                         
                           ],
                         ),
                       ),

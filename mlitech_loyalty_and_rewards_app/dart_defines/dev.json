@@ -1,5 +1,5 @@
 {
-  "API_BASE_URL": "http://31.97.117.41:5004",
-  "SOCKET_BASE_URL": "http://31.97.117.41:5004",
+  "API_BASE_URL": "http://10.10.26.208:4004",
+  "SOCKET_BASE_URL": "http://10.10.26.208:4004",
   "APP_ENV": "development"
 }

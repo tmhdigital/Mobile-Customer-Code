@@ -2,20 +2,30 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:loyalty_customer/const/app_color.dart';
 import 'package:loyalty_customer/screen/splash_screen/controller/splash_controller.dart';
+import 'package:loyalty_customer/utils/app_size.dart';
+import 'package:loyalty_customer/widget/app_image/app_image.dart';
 
-/// Invisible bootstrap screen: the native splash screen (configured via
-/// flutter_native_splash) stays on top of this the whole time and is only
-/// removed once [SplashController] has decided where to navigate, so the
-/// user only ever sees one logo screen.
 class SplashScreen extends StatelessWidget {
   const SplashScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
+    Size size = MediaQuery.of(context).size;
+    AppSize.size = size;
     return GetBuilder<SplashController>(
       init: SplashController(),
       builder: (controller) {
-        return Scaffold(backgroundColor: AppColor.button5Light);
+        return Scaffold(
+           backgroundColor: AppColor.button5Light,
+          body: SizedBox.expand(
+            child: AppImage(
+              path: "assets/images/customer-loader.png",
+              width: size.width,
+              height: size.height,
+              fit: BoxFit.cover,
+            ),
+          ),
+        );
       },
     );
   }
