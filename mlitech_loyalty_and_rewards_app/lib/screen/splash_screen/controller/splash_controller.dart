@@ -1,3 +1,4 @@
+import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:get/get.dart';
 import 'package:loyalty_customer/routes/app_routes.dart';
 import 'package:loyalty_customer/screen/profile_section/profile_screen/model/profile_model.dart';
@@ -27,8 +28,14 @@ class SplashController extends GetxController {
       _handleNavigation();
     } catch (e) {
       AppPrint.appError(e, title: "onInitialDataLoadScreen");
-      Get.offAllNamed(AppRoutes.instance.onBoardingScreen);
+      _navigateTo(AppRoutes.instance.onBoardingScreen);
     }
+  }
+
+  // নেটিভ স্প্ল্যাশ সরিয়ে দিয়ে টার্গেট রুটে নেভিগেট করা হয়, যাতে অ্যাপ স্প্ল্যাশে আটকে না থাকে
+  void _navigateTo(String route, {Object? arguments}) {
+    FlutterNativeSplash.remove();
+    Get.offAllNamed(route, arguments: arguments);
   }
 
   // টোকেন থাকলে প্রোফাইল ডেটা নিয়ে আসার ফাংশন
@@ -46,9 +53,9 @@ class SplashController extends GetxController {
     // টোকেন না থাকলে সরাসরি অনবোর্ডিং
     if (token.isEmpty) {
       if (storageServices.getIsUserFirstTime() == true) {
-        Get.offAllNamed(AppRoutes.instance.authScreen);
+        _navigateTo(AppRoutes.instance.authScreen);
       } else {
-        Get.offAllNamed(AppRoutes.instance.onBoardingScreen);
+        _navigateTo(AppRoutes.instance.onBoardingScreen);
       }
       return;
     }
@@ -62,22 +69,22 @@ class SplashController extends GetxController {
         data.location!.coordinates!.any((e) => e == 0.0 || e == null);
 
     if (isLocationEmpty) {
-      Get.offAllNamed(AppRoutes.instance.locationScreen);
+      _navigateTo(AppRoutes.instance.locationScreen);
       return;
     }
 
     // ২. ইউজার ওয়েটিং লিস্টে আছে কিনা
     if (data.isUserWaiting == true) {
-      Get.offAllNamed(AppRoutes.instance.waitingScreen);
+      _navigateTo(AppRoutes.instance.waitingScreen);
       return;
     }
 
     // ৩. সাবস্ক্রিপশন চেক
     if (data?.subscription == "active") {
-      Get.offAllNamed(AppRoutes.instance.navigationScreen);
+      _navigateTo(AppRoutes.instance.navigationScreen);
     } else {
       // সাবস্ক্রিপশন একটিভ না থাকলে পেমেন্ট/সাবস্ক্রিপশন স্ক্রিন
-      Get.offAllNamed(AppRoutes.instance.mySubScreen, arguments: {'value': 1});
+      _navigateTo(AppRoutes.instance.mySubScreen, arguments: {'value': 1});
     }
   }
 
