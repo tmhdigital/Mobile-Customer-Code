@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:get/get.dart';
 import 'package:loyalty_customer/routes/app_routes.dart';
 import 'package:loyalty_customer/screen/profile_section/profile_screen/model/profile_model.dart';
@@ -10,10 +10,8 @@ class SplashController extends GetxController {
   final GetStorageServices storageServices = GetStorageServices.instance;
   final GetRepository getRepository = GetRepository.instance;
 
-  // রিঅ্যাক্টিভ ভেরিয়েবলস
+  // রিঅ্যাক্টিভ ভেরিয়েবলস
   Rxn<ProfileModelData> profileModelData = Rxn<ProfileModelData>();
-  RxDouble animation = 0.0.obs;
-  RxDouble animation2 = 0.0.obs;
 
   @override
   void onInit() {
@@ -23,29 +21,27 @@ class SplashController extends GetxController {
 
   Future<void> onInitialDataLoadScreen() async {
     try {
-      // ১. এনিমেশন শুরু (সামান্য ডিলে দিয়ে যাতে স্মুথ হয়)
-      Future.delayed(Durations.medium1, () {
-        animation.value = 1.0;
-        animation2.value = 1.0;
-      });
+      // টোকেন থাকলে প্রোফাইল/সাবস্ক্রিপশন ডেটা লোড করবে
+      await _fetchInitialData();
 
-      // ২. টাইমার এবং API কল দুটি একসাথে সম্পন্ন হওয়া পর্যন্ত অপেক্ষা করবে
-      // এটি নিশ্চিত করবে যে এনিমেশন দেখার জন্য অন্তত ৩ সেকেন্ড সময় পাবে এবং ডেটাও লোড হবে
-      await Future.wait([
-        Future.delayed(const Duration(seconds: 3)),
-        _fetchInitialData(),
-      ]);
-
-      // ৩. সব ডেটা লোড হওয়ার পর নেভিগেশন ডিসিশন নেওয়া হবে
+      // ডেটা লোড হওয়ার পর নেভিগেশন ডিসিশন নেওয়া হবে
       _handleNavigation();
     } catch (e) {
       AppPrint.appError(e, title: "onInitialDataLoadScreen");
-      // এরর হলে অনবোর্ডিং স্ক্রিনে পাঠিয়ে দেওয়া নিরাপদ
-      Get.offAllNamed(AppRoutes.instance.onBoardingScreen);
+      // এরর হলে অনবোর্ডিং স্ক্রিনে পাঠিয়ে দেওয়া নিরাপদ
+      _navigateTo(AppRoutes.instance.onBoardingScreen);
     }
   }
 
-  // টোকেন থাকলে প্রোফাইল ডেটা নিয়ে আসার ফাংশন
+  /// Removes the native splash screen (kept alive since app launch) right
+  /// before handing off to the resolved first screen, so only one splash
+  /// is ever visible to the user.
+  void _navigateTo(String route, {Object? arguments}) {
+    FlutterNativeSplash.remove();
+    Get.offAllNamed(route, arguments: arguments);
+  }
+
+  // টোকেন থাকলে প্রোফাইল ডেটা নিয়ে আসার ফাংশন
   Future<void> _fetchInitialData() async {
     final String token = storageServices.getToken();
     if (token.isNotEmpty) {
@@ -60,9 +56,9 @@ class SplashController extends GetxController {
     // টোকেন না থাকলে সরাসরি অনবোর্ডিং
     if (token.isEmpty) {
       if (storageServices.getIsUserFirstTime() == true) {
-        Get.offAllNamed(AppRoutes.instance.authScreen);
+        _navigateTo(AppRoutes.instance.authScreen);
       } else {
-        Get.offAllNamed(AppRoutes.instance.onBoardingScreen);
+        _navigateTo(AppRoutes.instance.onBoardingScreen);
       }
       return;
     }
@@ -76,22 +72,22 @@ class SplashController extends GetxController {
         data.location!.coordinates!.any((e) => e == 0.0 || e == null);
 
     if (isLocationEmpty) {
-      Get.offAllNamed(AppRoutes.instance.locationScreen);
+      _navigateTo(AppRoutes.instance.locationScreen);
       return;
     }
 
-    // ২. ইউজার ওয়েটিং লিস্টে আছে কিনা
+    // ২. ইউজার ওয়েটিং লিস্টে আছে কিনা
     if (data.isUserWaiting == true) {
-      Get.offAllNamed(AppRoutes.instance.waitingScreen);
+      _navigateTo(AppRoutes.instance.waitingScreen);
       return;
     }
 
     // ৩. সাবস্ক্রিপশন চেক
     if (data?.subscription == "active") {
-      Get.offAllNamed(AppRoutes.instance.navigationScreen);
+      _navigateTo(AppRoutes.instance.navigationScreen);
     } else {
       // সাবস্ক্রিপশন একটিভ না থাকলে পেমেন্ট/সাবস্ক্রিপশন স্ক্রিন
-      Get.offAllNamed(AppRoutes.instance.mySubScreen, arguments: {'value': 1});
+      _navigateTo(AppRoutes.instance.mySubScreen, arguments: {'value': 1});
     }
   }
 
@@ -111,5 +107,3 @@ class SplashController extends GetxController {
     }
   }
 }
-
-

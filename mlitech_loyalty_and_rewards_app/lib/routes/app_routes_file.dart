@@ -45,6 +45,7 @@ import 'package:loyalty_customer/screen/show_details_screen/show_details_screen.
 import 'package:loyalty_customer/screen/splash_screen/splash_screen.dart';
 import 'package:loyalty_customer/screen/subscription_screen/my_sub_screen/my_sub_screen.dart';
 import 'package:loyalty_customer/screen/subscription_screen/my_sub_screen/stripe_checkout_webview_screen.dart';
+import 'package:loyalty_customer/screen/subscription_screen/my_sub_screen/kuickpay_checkout_webview_screen.dart';
 import 'package:loyalty_customer/screen/terms_screen/terms_screen.dart';
 import 'package:loyalty_customer/screen/transaction_history_screen/transaction_history_screen.dart';
 import 'package:loyalty_customer/screen/voucher_screen/voucher_screen.dart';
@@ -94,6 +95,11 @@ List<GetPage> appRootRoutesFile = <GetPage>[
     name: AppRoutes.instance.stripeCheckoutWebView,
     binding: AppBinding(),
     page: () => const StripeCheckoutWebViewScreen(),
+  ),
+  GetPage(
+    name: AppRoutes.instance.kuickpayCheckoutWebView,
+    binding: AppBinding(),
+    page: () => const KuickpayCheckoutWebViewScreen(),
   ),
   GetPage(
     name: AppRoutes.instance.termsScreen,
