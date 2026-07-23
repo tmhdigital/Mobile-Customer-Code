@@ -6,7 +6,12 @@ class AppApiEndPoint {
   static AppApiEndPoint get instance => _instance;
 
   /// Injected at compile time via `--dart-define` or `--dart-define-from-file`.
-  static const String apiBaseUrl = String.fromEnvironment('API_BASE_URL');
+  /// Defaults to the production API so plain `flutter build apk --release`
+  /// (no dart-define flags) works out of the box.
+  static const String apiBaseUrl = String.fromEnvironment(
+    'API_BASE_URL',
+    defaultValue: 'https://api.rewaldo.com',
+  );
 
   /// Defaults to [apiBaseUrl] when not set separately.
   static const String socketBaseUrl = String.fromEnvironment('SOCKET_BASE_URL');
