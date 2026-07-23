@@ -27,7 +27,7 @@ class OnBoardingScreen extends StatelessWidget {
             children: [
               OnBoardingSection(
                 imamePath: AssetsPath.onBoard1,
-                title: "Welcome to [Your App Name]!",
+                title: "Welcome to Rewaldo!",
                 subTitle:
                     "Every purchase brings you closer to exclusive benefits.",
                 wedth: AppSize.size.width * 0.8,
@@ -47,7 +47,7 @@ class OnBoardingScreen extends StatelessWidget {
                 imamePath: AssetsPath.onBoard3,
                 title: "Refer a Friend, Get Rewarded!",
                 subTitle:
-                    "Refer your friends to [App Name] and introduce them to a world of exclusive benefits. You'll get rewarded, and so will they!",
+                    "Refer your friends to Rewaldo and introduce them to a world of exclusive benefits. You'll get rewarded, and so will they!",
                 // wedth: AppSize.size.width * 0.8,
                 // height: AppSize.size.height * 0.25,
                 wedth: 265,

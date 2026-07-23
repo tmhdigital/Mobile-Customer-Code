@@ -19,7 +19,7 @@ class SplashScreen extends StatelessWidget {
            backgroundColor: AppColor.button5Light,
           body: SizedBox.expand(
             child: AppImage(
-              path: "assets/images/customer-loader.png",
+              path: "assets/images/rewaldo-logo-white.png",
               width: size.width,
               height: size.height,
               fit: BoxFit.cover,

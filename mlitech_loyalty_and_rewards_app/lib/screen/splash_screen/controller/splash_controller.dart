@@ -20,7 +20,7 @@ class SplashController extends GetxController {
   Future<void> onInitialDataLoadScreen() async {
     try {
       await Future.wait([
-        Future.delayed(const Duration(seconds: 3)),
+        Future.delayed(const Duration(seconds: 2)),
         _fetchInitialData(),
       ]);
 
