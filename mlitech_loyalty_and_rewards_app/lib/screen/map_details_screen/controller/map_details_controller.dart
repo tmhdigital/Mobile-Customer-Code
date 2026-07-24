@@ -15,11 +15,11 @@ import 'package:loyalty_customer/widget/app_snackbar/app_snack_bar.dart';
 
 class MapDetailsController extends GetxController {
   final Completer<GoogleMapController> controller =
-      Completer<GoogleMapController>();
+  Completer<GoogleMapController>();
 
   final Rx<Set<Marker>> markers = Rx<Set<Marker>>({});
   Rxn<NearByMerchentModelData> selectedMerchant =
-      Rxn<NearByMerchentModelData>();
+  Rxn<NearByMerchentModelData>();
   Rxn<CameraPosition> initialCameraPosition = Rxn<CameraPosition>();
 
   List<NearByMerchentModelData> merchantList = [];
@@ -258,24 +258,24 @@ class MapDetailsController extends GetxController {
     final Set<Marker> tempMarkers = merchantList
         .where(
           (m) =>
-              m.lat != null &&
-              m.lng != null &&
-              !(m.lat == 0.0 && m.lng == 0.0),
-        )
+      m.lat != null &&
+          m.lng != null &&
+          !(m.lat == 0.0 && m.lng == 0.0),
+    )
         .map((merchant) {
-          return Marker(
-            markerId: MarkerId(merchant.id ?? UniqueKey().toString()),
-            position: LatLng(merchant.lat!, merchant.lng!),
-            onTap: () => selectMerchant(merchant),
-            icon: BitmapDescriptor.defaultMarkerWithHue(
-              BitmapDescriptor.hueRed,
-            ),
-            infoWindow: InfoWindow(
-              title: merchant.firstName ?? "Merchant",
-              snippet: "Tap for details",
-            ),
-          );
-        })
+      return Marker(
+        markerId: MarkerId(merchant.id ?? UniqueKey().toString()),
+        position: LatLng(merchant.lat!, merchant.lng!),
+        onTap: () => selectMerchant(merchant),
+        icon: BitmapDescriptor.defaultMarkerWithHue(
+          BitmapDescriptor.hueRed,
+        ),
+        infoWindow: InfoWindow(
+          title: merchant.firstName ?? "Merchant",
+          snippet: "Tap for details",
+        ),
+      );
+    })
         .toSet();
 
     markers.value = tempMarkers;
@@ -370,7 +370,7 @@ class MapDetailsController extends GetxController {
 
   String getMerchantImageUrl(NearByMerchentModelData merchant) {
     if (merchant.profile != null && merchant.profile!.isNotEmpty) {
-      return "${AppApiEndPoint.domain}${merchant.profile}";
+      return AppApiEndPoint.mediaUrl(merchant.profile);
     }
     return "";
   }

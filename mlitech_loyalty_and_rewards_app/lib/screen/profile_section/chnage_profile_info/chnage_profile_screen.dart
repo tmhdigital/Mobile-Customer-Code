@@ -56,13 +56,13 @@ class ChnageProfileScreen extends StatelessWidget {
                           child: Container(
                             child: controller.cameraImage.value.isNotEmpty
                                 ? AppImageCircular(
-                                    filePath: controller.cameraImage.value,
-                                  )
+                              filePath: controller.cameraImage.value,
+                            )
                                 : AppImageCircular(
-                                    borderColor: appThemeColor.icon,
-                                    url:
-                                        "${AppApiEndPoint.domain}${controller.profileController.profileData.value?.profile}",
-                                  ),
+                              borderColor: appThemeColor.icon,
+                              url:
+                              AppApiEndPoint.mediaUrl(controller.profileController.profileData.value?.profile),
+                            ),
                           ),
                         ),
                       ),
@@ -139,7 +139,7 @@ class ChnageProfileScreen extends StatelessWidget {
                               title: "Full Name",
                               hintText: "Enter NAme",
                             ),
-                            
+
                             AppText(
                               data: "Email",
                               fontSize: AppSize.width(value: 16),
@@ -166,11 +166,11 @@ class ChnageProfileScreen extends StatelessWidget {
                                 ),
                                 child: AppText(
                                   data:
-                                      controller
-                                          .profileController
-                                          .profileData
-                                          .value
-                                          ?.email ??
+                                  controller
+                                      .profileController
+                                      .profileData
+                                      .value
+                                      ?.email ??
                                       '',
                                   fontSize: AppSize.width(value: 16),
                                   fontWeight: FontWeight.w500,
@@ -206,11 +206,11 @@ class ChnageProfileScreen extends StatelessWidget {
                                 ),
                                 child: AppText(
                                   data:
-                                      controller
-                                          .profileController
-                                          .profileData
-                                          .value
-                                          ?.phone ??
+                                  controller
+                                      .profileController
+                                      .profileData
+                                      .value
+                                      ?.phone ??
                                       '',
                                   fontSize: AppSize.width(value: 16),
                                   fontWeight: FontWeight.w500,
@@ -226,7 +226,7 @@ class ChnageProfileScreen extends StatelessWidget {
                               color: AppColor.button1Dark,
                             ),
                             Obx(
-                              () => PlaceAutocompleteWidget(
+                                  () => PlaceAutocompleteWidget(
                                 borderColor: AppColor.button1Dark,
                                 contentPadding: EdgeInsets.all(
                                   AppSize.height(value: 14),
@@ -240,66 +240,66 @@ class ChnageProfileScreen extends StatelessWidget {
                                     .locationController
                                     .searchController,
                                 hintText:
-                                    controller.userAddress.value.isNotEmpty
+                                controller.userAddress.value.isNotEmpty
                                     ? controller.userAddress.value
                                     : "Enter Address",
                                 borderWidth: 0.9,
                                 showCurrentLocation: true,
                                 currentLocationAddress:
-                                    controller.userAddress.value.isNotEmpty
+                                controller.userAddress.value.isNotEmpty
                                     ? controller.userAddress.value
                                     : null,
                                 currentLocationLat:
-                                    controller.selectedLatitude.value != 0.0
+                                controller.selectedLatitude.value != 0.0
                                     ? controller.selectedLatitude.value
                                     : null,
                                 currentLocationLng:
-                                    controller.selectedLongitude.value != 0.0
+                                controller.selectedLongitude.value != 0.0
                                     ? controller.selectedLongitude.value
                                     : null,
                                 onPlaceSelected:
                                     (
-                                      placeId,
-                                      description, {
-                                      isCurrentLocation = false,
+                                    placeId,
+                                    description, {
+                                  isCurrentLocation = false,
+                                  lat,
+                                  lng,
+                                }) {
+                                  // Update location in both controllers
+                                  if (lat != null && lng != null) {
+                                    controller.updateLocation(
                                       lat,
                                       lng,
-                                    }) {
-                                      // Update location in both controllers
-                                      if (lat != null && lng != null) {
-                                        controller.updateLocation(
-                                          lat,
-                                          lng,
-                                          description,
-                                        );
-                                        controller.locationController
-                                            .onPlaceSelected(
-                                              placeId,
-                                              description,
-                                              isCurrentLocation:
-                                                  isCurrentLocation,
-                                              lat: lat,
-                                              lng: lng,
-                                            );
-                                      }
-                                    },
+                                      description,
+                                    );
+                                    controller.locationController
+                                        .onPlaceSelected(
+                                      placeId,
+                                      description,
+                                      isCurrentLocation:
+                                      isCurrentLocation,
+                                      lat: lat,
+                                      lng: lng,
+                                    );
+                                  }
+                                },
                               ),
                             ),
 
                             CountryCityDropdown(
                               initialCountry:
-                                  controller
-                                      .profileController
-                                      .profileData
-                                      .value
-                                      ?.country ??
+                              controller
+                                  .profileController
+                                  .profileData
+                                  .value
+                                  ?.country ??
                                   "",
                               initialCity:
-                                  controller
-                                      .profileController
-                                      .profileData
-                                      .value
-                                      ?.city ??
+                              controller
+                                  .profileController
+                                  .profileData
+                                  .value
+                                  ?.city ??
                                   "",
                               fillColor: Colors.white,
                               textColor: Colors.black,

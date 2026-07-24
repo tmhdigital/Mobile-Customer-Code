@@ -36,7 +36,7 @@ class WalletCard extends StatelessWidget {
                 children: [
                   AppText(
                     data:
-                        "Name : ${digitalCard?.merchantId.businessName ?? ""}",
+                    "Name : ${digitalCard?.merchantId.businessName ?? ""}",
                     fontSize: AppSize.width(value: 18),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
@@ -46,7 +46,7 @@ class WalletCard extends StatelessWidget {
                   Gap(height: AppSize.width(value: 10)),
                   AppText(
                     data:
-                        "Point Available : ${digitalCard?.availablePoints.toString() ?? 0}",
+                    "Point Available : ${digitalCard?.availablePoints.toString() ?? 0}",
                     fontSize: AppSize.width(value: 18),
                     fontWeight: FontWeight.w400,
                     color: Colors.white,
@@ -63,7 +63,7 @@ class WalletCard extends StatelessWidget {
 
               AppImageCircular(
                 url:
-                    "${AppApiEndPoint.domain}${digitalCard?.merchantId.profile}",
+                AppApiEndPoint.mediaUrl(digitalCard?.merchantId.profile),
                 width: AppSize.width(value: 56),
                 height: AppSize.width(value: 56),
               ),

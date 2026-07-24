@@ -55,7 +55,7 @@ class RefferFriendListScreen extends StatelessWidget {
                   Get.toNamed(
                     AppRoutes.instance.refferFriendScreen,
                     arguments:
-                        controller.referralSummaryData.value?.myReferenceId,
+                    controller.referralSummaryData.value?.myReferenceId,
                   );
                 },
                 borderRadius: BorderRadius.circular(24),
@@ -96,21 +96,21 @@ class RefferFriendListScreen extends StatelessWidget {
                           ),
                           AppText(
                             data:
-                                "Current Balance : ${controller.referralSummaryData.value?.totalPoints}",
+                            "Current Balance : ${controller.referralSummaryData.value?.totalPoints}",
                             fontSize: AppSize.width(value: 18),
                             fontWeight: FontWeight.w700,
                             color: appThemeColor.text2,
                           ),
                           AppText(
                             data:
-                                "Total Referrals : ${controller.referralSummaryData.value?.totalReferrals}",
+                            "Total Referrals : ${controller.referralSummaryData.value?.totalReferrals}",
                             fontSize: AppSize.width(value: 14),
                             fontWeight: FontWeight.w400,
                             color: appThemeColor.text2,
                           ),
                           AppText(
                             data:
-                                "Total Join : ${controller.referralSummaryData.value?.totalJoin}",
+                            "Total Join : ${controller.referralSummaryData.value?.totalJoin}",
                             fontSize: AppSize.width(value: 14),
                             fontWeight: FontWeight.w400,
                             color: appThemeColor.text2,
@@ -122,23 +122,23 @@ class RefferFriendListScreen extends StatelessWidget {
 
                   Obx(() {
                     return controller
-                                .referralSummaryData
-                                .value
-                                ?.referrals
-                                .isNotEmpty ??
-                            false
+                        .referralSummaryData
+                        .value
+                        ?.referrals
+                        .isNotEmpty ??
+                        false
                         ? AppText(
-                            data: "Refer Friends List",
-                            fontSize: AppSize.width(value: 18),
-                            fontWeight: FontWeight.w700,
-                            color: appThemeColor.text2,
-                          )
+                      data: "Refer Friends List",
+                      fontSize: AppSize.width(value: 18),
+                      fontWeight: FontWeight.w700,
+                      color: appThemeColor.text2,
+                    )
                         : AppText(
-                            data: "No Referral Found",
-                            fontSize: AppSize.width(value: 18),
-                            fontWeight: FontWeight.w700,
-                            color: appThemeColor.text2,
-                          );
+                      data: "No Referral Found",
+                      fontSize: AppSize.width(value: 18),
+                      fontWeight: FontWeight.w700,
+                      color: appThemeColor.text2,
+                    );
                   }),
 
                   Obx(() {
@@ -153,21 +153,21 @@ class RefferFriendListScreen extends StatelessWidget {
                         },
                       );
                     } else if (controller
-                            .referralSummaryData
-                            .value
-                            ?.referrals
-                            .isNotEmpty ??
+                        .referralSummaryData
+                        .value
+                        ?.referrals
+                        .isNotEmpty ??
                         false) {
                       // Show actual data
                       return ListView.builder(
                         shrinkWrap: true,
                         physics: NeverScrollableScrollPhysics(),
                         itemCount:
-                            controller
-                                .referralSummaryData
-                                .value
-                                ?.referrals
-                                .length ??
+                        controller
+                            .referralSummaryData
+                            .value
+                            ?.referrals
+                            .length ??
                             0,
                         itemBuilder: (context, index) {
                           final referral = controller
@@ -221,7 +221,7 @@ class RefferFriendCard extends StatelessWidget {
           spacing: AppSize.width(value: 12),
           children: [
             AppImageCircular(
-              url: "${AppApiEndPoint.domain}${referral?.user?.profile}",
+              url: AppApiEndPoint.mediaUrl(referral?.user?.profile),
               width: AppSize.width(value: 56),
               height: AppSize.width(value: 56),
             ),

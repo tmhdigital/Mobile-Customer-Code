@@ -51,7 +51,7 @@ class MerchantCard extends StatelessWidget {
               borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
               child: AppImage(
                 fit: BoxFit.cover,
-                url: "${AppApiEndPoint.domain}${merchant?.photo}",
+                url: AppApiEndPoint.mediaUrl(merchant?.photo),
                 width: double.infinity,
                 height: AppSize.height(
                   value: 150,
@@ -66,7 +66,7 @@ class MerchantCard extends StatelessWidget {
                   AppImageCircular(
                     width: AppSize.width(value: 56),
                     height: AppSize.width(value: 56),
-                    url: "${AppApiEndPoint.domain}${merchant?.profile}",
+                    url: AppApiEndPoint.mediaUrl(merchant?.profile),
                   ),
                   Gap(width: AppSize.width(value: 12)),
                   Expanded(
@@ -89,13 +89,13 @@ class MerchantCard extends StatelessWidget {
                                 padding: EdgeInsets.only(right: 8.0),
                                 child: favorateValue
                                     ? Icon(
-                                        Icons.favorite_sharp,
-                                        color: AppColor.buttonLight,
-                                      )
+                                  Icons.favorite_sharp,
+                                  color: AppColor.buttonLight,
+                                )
                                     : Icon(
-                                        Icons.favorite_border,
-                                        color: AppColor.button1Dark,
-                                      ),
+                                  Icons.favorite_border,
+                                  color: AppColor.button1Dark,
+                                ),
                               ),
                             ),
                           ],
@@ -111,7 +111,7 @@ class MerchantCard extends StatelessWidget {
                             Gap(width: AppSize.width(value: 8)),
                             AppText(
                               data:
-                                  "${merchant?.city ?? "N/A"} | ${merchant?.country ?? "N/A"}",
+                              "${merchant?.city ?? "N/A"} | ${merchant?.country ?? "N/A"}",
                               // fontSize: AppSize.width(value: 12),
                               fontSize: 14,
                               fontWeight: FontWeight.w400,

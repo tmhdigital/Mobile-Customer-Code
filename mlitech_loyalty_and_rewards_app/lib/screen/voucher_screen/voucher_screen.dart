@@ -30,7 +30,7 @@ class VoucherScreen extends StatelessWidget {
                 children: [
                   AppImage(
                     url:
-                        "${AppApiEndPoint.domain}${controller.promotion?.promotion?.image}",
+                    AppApiEndPoint.mediaUrl(controller.promotion?.promotion?.image),
                     width: AppSize.width(value: double.infinity),
                     height: AppSize.size.height * 0.2,
                   ),
@@ -92,14 +92,14 @@ class VoucherScreen extends StatelessWidget {
                     ),
                     AppText(
                       data:
-                          "${controller.promotion?.promotion?.discountPercentage} % OFF",
+                      "${controller.promotion?.promotion?.discountPercentage} % OFF",
                       fontSize: AppSize.width(value: 14),
                       fontWeight: FontWeight.w500,
                       color: appThemeColor.text2,
                     ),
                     AppText(
                       data:
-                          "Expire On ${dateFormetterForPromotion(controller.promotion?.promotion?.endDate)}",
+                      "Expire On ${dateFormetterForPromotion(controller.promotion?.promotion?.endDate)}",
                       fontSize: AppSize.width(value: 14),
                       fontWeight: FontWeight.w500,
                       color: appThemeColor.text2,
@@ -126,7 +126,7 @@ class VoucherScreen extends StatelessWidget {
                           ),
                           child: SfBarcodeGenerator(
                             value:
-                                controller.promotion?.promoCode ?? "",
+                            controller.promotion?.promoCode ?? "",
                             symbology: QRCode(),
                           ),
                         ),
@@ -141,7 +141,7 @@ class VoucherScreen extends StatelessWidget {
                   ],
                 ),
               ),
-            
+
             ],
           ),
         );

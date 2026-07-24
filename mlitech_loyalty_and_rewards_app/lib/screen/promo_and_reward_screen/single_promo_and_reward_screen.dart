@@ -38,7 +38,7 @@ class SinglePromoAndRewardScreen extends StatelessWidget {
                           if (imageUrl.isNotEmpty) {
                             showPopUpImage(
                               context,
-                              "${AppApiEndPoint.domain}$imageUrl",
+                              AppApiEndPoint.mediaUrl(imageUrl),
                             );
                           }
                         },
@@ -102,7 +102,7 @@ class SinglePromoAndRewardScreen extends StatelessWidget {
                         ),
                         AppText(
                           data:
-                              "${controller.promotion?.discountPercentage} % OFF",
+                          "${controller.promotion?.discountPercentage} % OFF",
                           fontSize: AppSize.width(value: 14),
                           fontWeight: FontWeight.w500,
                           color: appThemeColor.text2,
@@ -111,7 +111,7 @@ class SinglePromoAndRewardScreen extends StatelessWidget {
                           children: [
                             AppText(
                               data:
-                                  "Expire On ${formatDate(controller.promotion?.endDate)}",
+                              "Expire On ${formatDate(controller.promotion?.endDate)}",
                               fontSize: AppSize.width(value: 14),
                               fontWeight: FontWeight.w500,
                               color: appThemeColor.text2,
@@ -135,14 +135,14 @@ class SinglePromoAndRewardScreen extends StatelessWidget {
                 child: controller.isButtonVisible ?? false
                     ? const SizedBox.shrink()
                     : Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: AppButton(
-                          onTap: () {
-                            controller.addToWallet();
-                          },
-                          title: "Add To Wallet",
-                        ),
-                      ),
+                  padding: const EdgeInsets.all(8.0),
+                  child: AppButton(
+                    onTap: () {
+                      controller.addToWallet();
+                    },
+                    title: "Add To Wallet",
+                  ),
+                ),
               ),
             );
           },

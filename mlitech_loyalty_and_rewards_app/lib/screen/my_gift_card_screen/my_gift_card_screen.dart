@@ -62,7 +62,7 @@ class MyGiftCardScreen extends StatelessWidget {
                                 children: [
                                   AppText(
                                     data:
-                                        "User Name : ${controller.merchantName ?? ""}",
+                                    "User Name : ${controller.merchantName ?? ""}",
                                     fontSize: AppSize.width(value: 12),
                                     fontWeight: FontWeight.w400,
                                     color: Colors.white,
@@ -70,7 +70,7 @@ class MyGiftCardScreen extends StatelessWidget {
                                   Gap(height: AppSize.width(value: 6)),
                                   AppText(
                                     data:
-                                        "Point Available : ${controller.point?.toStringAsFixed(2) ?? 0}",
+                                    "Point Available : ${controller.point?.toStringAsFixed(2) ?? 0}",
                                     fontSize: AppSize.width(value: 12),
                                     fontWeight: FontWeight.w400,
                                     color: Colors.white,
@@ -78,7 +78,7 @@ class MyGiftCardScreen extends StatelessWidget {
                                   Spacer(),
                                   AppText(
                                     data:
-                                        "Card ID: ${controller.cardCode ?? ""}",
+                                    "Card ID: ${controller.cardCode ?? ""}",
                                     fontSize: AppSize.width(value: 12),
                                     fontWeight: FontWeight.w700,
                                     color: Colors.white,
@@ -88,7 +88,7 @@ class MyGiftCardScreen extends StatelessWidget {
 
                               AppImageCircular(
                                 url:
-                                    "${AppApiEndPoint.domain}${controller.image ?? ""}",
+                                AppApiEndPoint.mediaUrl(controller.image ?? ""),
                                 width: AppSize.width(value: 34),
                                 height: AppSize.width(value: 34),
                               ),
@@ -199,7 +199,7 @@ class MyGiftCardScreen extends StatelessWidget {
                           children: [
                             AppText(
                               data:
-                                  "Your Tier: ${controller.merchantTiar.value?.tierName ?? "No Tier"}",
+                              "Your Tier: ${controller.merchantTiar.value?.tierName ?? "No Tier"}",
                               fontSize: AppSize.width(value: 14),
                               fontWeight: FontWeight.w400,
                               color: color.text4,
@@ -275,9 +275,9 @@ class MyGiftCardScreen extends StatelessWidget {
   }
 
   Widget _buildTransactionList(
-    MyGiftCardController controller,
-    AppThemeColor color,
-  ) {
+      MyGiftCardController controller,
+      AppThemeColor color,
+      ) {
     return Obx(() {
       if (controller.isLoading.value) {
         return ListView.builder(
@@ -322,7 +322,7 @@ class MyGiftCardScreen extends StatelessWidget {
                 children: [
                   AppImageCircular(
                     url:
-                        "${AppApiEndPoint.domain}${transaction.merchantProfile}",
+                    AppApiEndPoint.mediaUrl(transaction.merchantProfile),
                     width: AppSize.width(value: 40),
                     height: AppSize.width(value: 40),
                   ),
@@ -345,7 +345,7 @@ class MyGiftCardScreen extends StatelessWidget {
                         ),
                         AppText(
                           data:
-                              "${transaction.date != null ? _formatDate(transaction.date!) : ""} || ${transaction.totalBill ?? 0}",
+                          "${transaction.date != null ? _formatDate(transaction.date!) : ""} || ${transaction.totalBill ?? 0}",
                           fontSize: AppSize.width(value: 12),
                           fontWeight: FontWeight.w400,
                           color: AppColor.text4Light,
@@ -404,7 +404,7 @@ class MyGiftCardScreen extends StatelessWidget {
                                         ),
                                         AppDescriptionTextField(
                                           controller:
-                                              controller.commentController,
+                                          controller.commentController,
                                           title: '',
                                           hintText: "Write Your Feedback Here",
                                           border: OutlineInputBorder(
@@ -419,7 +419,7 @@ class MyGiftCardScreen extends StatelessWidget {
                                         Center(
                                           child: RatingBar.builder(
                                             initialRating:
-                                                controller.ratingValue.value,
+                                            controller.ratingValue.value,
                                             minRating: 0.5,
                                             allowHalfRating: true,
                                             itemSize: 34,
@@ -431,13 +431,13 @@ class MyGiftCardScreen extends StatelessWidget {
                                               controller.updateRating(
                                                 value: rating,
                                                 promotionId:
-                                                    transaction.promotionId ??
+                                                transaction.promotionId ??
                                                     "",
                                                 merchantId:
-                                                    transaction.merchantId ??
+                                                transaction.merchantId ??
                                                     "",
                                                 digitalCardId:
-                                                    transaction.digitalCardId ??
+                                                transaction.digitalCardId ??
                                                     "",
                                               );
                                             },
@@ -449,14 +449,14 @@ class MyGiftCardScreen extends StatelessWidget {
                                           onTap: () {
                                             controller.rateMerchant(
                                               digitalCardId:
-                                                  transaction.digitalCardId ??
+                                              transaction.digitalCardId ??
                                                   "",
                                               promotionId:
-                                                  transaction.promotionId ?? "",
+                                              transaction.promotionId ?? "",
                                               merchantId:
-                                                  transaction.merchantId ?? "",
+                                              transaction.merchantId ?? "",
                                               rating:
-                                                  controller.ratingValue.value,
+                                              controller.ratingValue.value,
                                             );
 
                                             // AppPrint.apiResponse(

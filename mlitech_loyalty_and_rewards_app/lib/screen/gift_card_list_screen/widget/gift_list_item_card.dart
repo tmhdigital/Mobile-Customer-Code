@@ -37,7 +37,7 @@ class GiftListItemCard extends StatelessWidget {
               borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
               child: AppImage(
                 fit: BoxFit.cover,
-                url: "${AppApiEndPoint.domain}${myGiftCard.promotion?.image}",
+                url: AppApiEndPoint.mediaUrl(myGiftCard.promotion?.image),
                 width: double.infinity,
                 height: AppSize.height(
                   value: 150,
@@ -69,7 +69,7 @@ class GiftListItemCard extends StatelessWidget {
                       ),
                     ],
                   ),
-                  
+
                   if (cardId != null)
                     AppText(
                       data: "Card ID: ${cardId ?? ""}",
@@ -78,7 +78,7 @@ class GiftListItemCard extends StatelessWidget {
                       color: Colors.black,
                     ),
 
-                 
+
                   AppText(
                     data: "Tier: ${myGiftCard.promotion?.promotionType ?? ""}",
                     fontSize: AppSize.width(value: 14),
@@ -87,7 +87,7 @@ class GiftListItemCard extends StatelessWidget {
                   ),
                   AppText(
                     data:
-                        "Rewards:${myGiftCard.promotion?.discountPercentage ?? 0}% Discount",
+                    "Rewards:${myGiftCard.promotion?.discountPercentage ?? 0}% Discount",
                     fontSize: AppSize.width(value: 14),
                     fontWeight: FontWeight.w500,
                     color: Colors.black,

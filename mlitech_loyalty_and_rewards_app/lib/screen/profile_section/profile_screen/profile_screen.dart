@@ -44,7 +44,7 @@ class ProfileScreen extends StatelessWidget {
                         AppImageCircular(
                           fit: BoxFit.cover,
                           url:
-                              "${AppApiEndPoint.domain}${controller.profileData.value?.profile}",
+                          AppApiEndPoint.mediaUrl(controller.profileData.value?.profile),
                           width: AppSize.width(value: 124),
                           height: AppSize.width(value: 124),
                         ),
@@ -55,7 +55,7 @@ class ProfileScreen extends StatelessWidget {
                           children: [
                             AppText(
                               data:
-                                  controller.profileData.value?.firstName ??
+                              controller.profileData.value?.firstName ??
                                   "Loading...",
                               fontSize: AppSize.width(value: 18),
                               fontWeight: FontWeight.w700,
@@ -63,7 +63,7 @@ class ProfileScreen extends StatelessWidget {
                             ),
                             AppText(
                               data:
-                                  controller.profileData.value?.phone ??
+                              controller.profileData.value?.phone ??
                                   "Loading...",
                               fontSize: AppSize.width(value: 14),
                               fontWeight: FontWeight.w500,
@@ -265,7 +265,7 @@ class ProfileScreen extends StatelessWidget {
                                       ),
                                       AppText(
                                         data:
-                                            "Please confirm your password to remove your account.",
+                                        "Please confirm your password to remove your account.",
                                         fontSize: AppSize.width(value: 16),
                                         fontWeight: FontWeight.w500,
                                         textAlign: TextAlign.center,
@@ -277,7 +277,7 @@ class ProfileScreen extends StatelessWidget {
                                         hintText: "Password",
                                         isOptional: true,
                                         controller:
-                                            controller.passwordController,
+                                        controller.passwordController,
                                       ),
                                       Gap(height: 4),
                                       Row(
@@ -298,7 +298,7 @@ class ProfileScreen extends StatelessWidget {
                                                 ),
                                                 decoration: BoxDecoration(
                                                   borderRadius:
-                                                      BorderRadius.circular(8),
+                                                  BorderRadius.circular(8),
                                                   border: Border.all(
                                                     color: appThemeColor.icon1,
                                                   ),

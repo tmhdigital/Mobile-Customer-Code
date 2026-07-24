@@ -104,16 +104,16 @@ class AppImage extends StatelessWidget {
       child: Center(
         child: defaultAssetImage != null
             ? Image.asset(
-                defaultAssetImage!,
-                width: 40,
-                height: 40,
-                fit: BoxFit.contain,
-              )
+          defaultAssetImage!,
+          width: 40,
+          height: 40,
+          fit: BoxFit.contain,
+        )
             : Icon(
-                Icons.image_not_supported_outlined,
-                size: 40,
-                color: Colors.grey.shade500,
-              ),
+          Icons.image_not_supported_outlined,
+          size: 40,
+          color: Colors.grey.shade500,
+        ),
       ),
     );
   }
@@ -192,12 +192,10 @@ class _NetworkImageWithRetryState extends State<NetworkImageWithRetry>
 
   void _setImage() {
     try {
-      final uri = Uri.tryParse(widget.imageUrl);
-      if (uri != null && (uri.isScheme('http') || uri.isScheme('https'))) {
-        _image = widget.imageUrl;
-      } else {
-        _image = "${AppApiEndPoint.domain}${widget.imageUrl}";
-      }
+      // mediaUrl() khud hi check kar leta hai ke path pehle se absolute URL
+      // hai ya relative. Is liye yahan alag se Uri parse karne ki zaroorat
+      // nahi rahi.
+      _image = AppApiEndPoint.mediaUrl(widget.imageUrl);
     } catch (e) {
       log("Error setting image URL: $e");
       _image = widget.imageUrl;
@@ -252,10 +250,10 @@ class _NetworkImageWithRetryState extends State<NetworkImageWithRetry>
         child: widget.defaultAssetImage != null
             ? Image.asset(widget.defaultAssetImage!, width: 40, height: 40)
             : Icon(
-                Icons.broken_image_outlined,
-                size: 40,
-                color: Colors.grey.shade500,
-              ),
+          Icons.broken_image_outlined,
+          size: 40,
+          color: Colors.grey.shade500,
+        ),
       ),
     );
   }
@@ -274,15 +272,15 @@ class CustomCacheManager extends CacheManager {
   static final CustomCacheManager instance = CustomCacheManager._();
 
   CustomCacheManager._()
-    : super(
-        Config(
-          key,
-          stalePeriod: const Duration(days: 7),
-          maxNrOfCacheObjects: 300,
-          repo: JsonCacheInfoRepository(databaseName: key),
-          fileService: HttpFileService(),
-        ),
-      );
+      : super(
+    Config(
+      key,
+      stalePeriod: const Duration(days: 7),
+      maxNrOfCacheObjects: 300,
+      repo: JsonCacheInfoRepository(databaseName: key),
+      fileService: HttpFileService(),
+    ),
+  );
 }
 
 String optimizedImageUrl(String url, {int width = 600, int height = 600}) {

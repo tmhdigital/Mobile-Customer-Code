@@ -48,7 +48,7 @@ class HomeScreen extends StatelessWidget {
                 children: [
                   AppText(
                     data:
-                        "Hello ${controller.profileController.profileData.value?.firstName ?? "Loading..."}",
+                    "Hello ${controller.profileController.profileData.value?.firstName ?? "Loading..."}",
                     fontSize: AppSize.width(value: 18),
                     fontWeight: FontWeight.w700,
                     color: appThemeColor.text2,
@@ -59,11 +59,11 @@ class HomeScreen extends StatelessWidget {
 
                     child: AppText(
                       data:
-                          controller
-                              .profileController
-                              .profileData
-                              .value
-                              ?.address ??
+                      controller
+                          .profileController
+                          .profileData
+                          .value
+                          ?.address ??
                           "Loading...",
                       fontSize: AppSize.width(value: 12),
                       fontWeight: FontWeight.w400,
@@ -87,7 +87,7 @@ class HomeScreen extends StatelessWidget {
                   return AppImageCircular(
                     borderColor: appThemeColor.icon,
                     url:
-                        "${AppApiEndPoint.domain}${controller.profileController.profileData.value?.profile}",
+                    AppApiEndPoint.mediaUrl(controller.profileController.profileData.value?.profile),
                   );
                 }),
               ),
@@ -127,12 +127,12 @@ class HomeScreen extends StatelessWidget {
 
                       if (controller.hasNotification.value ||
                           controller
-                                  .navController
-                                  .notificationController
-                                  .notificationList
-                                  .firstWhereOrNull(
-                                    (element) => element.isRead == false,
-                                  ) !=
+                              .navController
+                              .notificationController
+                              .notificationList
+                              .firstWhereOrNull(
+                                (element) => element.isRead == false,
+                          ) !=
                               null)
                         Positioned(
                           top: 8,
@@ -182,30 +182,30 @@ class HomeScreen extends StatelessWidget {
                             ),
 
                             controller
-                                        .subSummaryList
-                                        .value
-                                        ?.subscriptionTitles
-                                        .isNotEmpty ==
-                                    true
+                                .subSummaryList
+                                .value
+                                ?.subscriptionTitles
+                                .isNotEmpty ==
+                                true
                                 ? AppText(
-                                    data:
-                                        controller
-                                            .subSummaryList
-                                            .value
-                                            ?.subscriptionTitles
-                                            .last ??
-                                        "Gold Membership",
-                                    fontSize: AppSize.width(value: 16),
-                                    fontWeight: FontWeight.w700,
-                                    color: Colors.black,
-                                  )
+                              data:
+                              controller
+                                  .subSummaryList
+                                  .value
+                                  ?.subscriptionTitles
+                                  .last ??
+                                  "Gold Membership",
+                              fontSize: AppSize.width(value: 16),
+                              fontWeight: FontWeight.w700,
+                              color: Colors.black,
+                            )
                                 : AppText(
-                                    data: "No Subscription",
-                                    fontSize: AppSize.width(value: 16),
-                                    fontWeight: FontWeight.w700,
-                                    color: Colors.black,
-                                  ),
-                            
+                              data: "No Subscription",
+                              fontSize: AppSize.width(value: 16),
+                              fontWeight: FontWeight.w700,
+                              color: Colors.black,
+                            ),
+
                             Container(
                               width: AppSize.size.width * 0.98,
                               height: 2,
@@ -229,11 +229,11 @@ class HomeScreen extends StatelessWidget {
                                 ),
                                 AppText(
                                   data:
-                                      controller
-                                          .subSummaryList
-                                          .value
-                                          ?.totalSpent
-                                          .toString() ??
+                                  controller
+                                      .subSummaryList
+                                      .value
+                                      ?.totalSpent
+                                      .toString() ??
                                       "0",
                                   fontSize: AppSize.width(value: 12),
                                   fontWeight: FontWeight.w400,
@@ -252,11 +252,11 @@ class HomeScreen extends StatelessWidget {
                                 ),
                                 AppText(
                                   data:
-                                      controller
-                                          .subSummaryList
-                                          .value
-                                          ?.totalDigitalCards
-                                          .toString() ??
+                                  controller
+                                      .subSummaryList
+                                      .value
+                                      ?.totalDigitalCards
+                                      .toString() ??
                                       "0",
                                   fontSize: AppSize.width(value: 12),
                                   fontWeight: FontWeight.w400,
@@ -275,11 +275,11 @@ class HomeScreen extends StatelessWidget {
                                 ),
                                 AppText(
                                   data:
-                                      controller
-                                          .subSummaryList
-                                          .value
-                                          ?.totalPromotions
-                                          .toString() ??
+                                  controller
+                                      .subSummaryList
+                                      .value
+                                      ?.totalPromotions
+                                      .toString() ??
                                       "0",
                                   fontSize: AppSize.width(value: 12),
                                   fontWeight: FontWeight.w400,
@@ -471,7 +471,7 @@ class HomeScreen extends StatelessWidget {
                                             height: AppSize.width(value: 12),
                                             decoration: BoxDecoration(
                                               borderRadius:
-                                                  BorderRadius.circular(4),
+                                              BorderRadius.circular(4),
                                               color: Colors.grey[300],
                                             ),
                                           ),
@@ -518,7 +518,7 @@ class HomeScreen extends StatelessWidget {
                                 itemCount: controller.merchantList.length,
                                 itemBuilder: (context, index) {
                                   final merchant =
-                                      controller.merchantList[index];
+                                  controller.merchantList[index];
                                   return HomeShopCard(
                                     onTap: () {
                                       Get.toNamed(
@@ -528,7 +528,7 @@ class HomeScreen extends StatelessWidget {
                                     },
                                     title: merchant.firstName ?? "",
                                     merchantImage:
-                                        "${AppApiEndPoint.domain}${merchant.profile ?? ""}",
+                                    AppApiEndPoint.mediaUrl(merchant.profile ?? ""),
                                     appThemeColor: appThemeColor,
                                   );
                                 },
@@ -584,38 +584,38 @@ class HomeScreen extends StatelessWidget {
                             height: AppSize.size.height * 0.3,
                             child: controller.isLoading.value
                                 ? ListView.builder(
-                                    scrollDirection: Axis.horizontal,
-                                    itemCount: 5,
-                                    itemBuilder: (context, index) {
-                                      return const HomeCardShimmer();
-                                    },
-                                  )
+                              scrollDirection: Axis.horizontal,
+                              itemCount: 5,
+                              itemBuilder: (context, index) {
+                                return const HomeCardShimmer();
+                              },
+                            )
                                 : ListView.builder(
-                                    scrollDirection: Axis.horizontal,
-                                    itemCount: controller.myGiftCardList.length,
-                                    itemBuilder: (context, index) {
-                                      var item =
-                                          controller.myGiftCardList[index];
-                                      return HomeRewardCard(
-                                        promotion: Promotion(
-                                          id: item.promotion?.id,
-                                          name: item.promotion?.name,
-                                          startDate: item.promotion?.startDate,
-                                          endDate: item.promotion?.endDate,
-                                          image: item.promotion?.image,
-                                          status: item.promotion?.status,
-                                          createdAt: item.promotion?.createdAt,
-                                          updatedAt: item.promotion?.updatedAt,
-                                        ),
-                                        onTap: () {
-                                          Get.toNamed(
-                                            AppRoutes.instance.voucherScreen,
-                                            arguments: item,
-                                          );
-                                        },
-                                      );
-                                    },
+                              scrollDirection: Axis.horizontal,
+                              itemCount: controller.myGiftCardList.length,
+                              itemBuilder: (context, index) {
+                                var item =
+                                controller.myGiftCardList[index];
+                                return HomeRewardCard(
+                                  promotion: Promotion(
+                                    id: item.promotion?.id,
+                                    name: item.promotion?.name,
+                                    startDate: item.promotion?.startDate,
+                                    endDate: item.promotion?.endDate,
+                                    image: item.promotion?.image,
+                                    status: item.promotion?.status,
+                                    createdAt: item.promotion?.createdAt,
+                                    updatedAt: item.promotion?.updatedAt,
                                   ),
+                                  onTap: () {
+                                    Get.toNamed(
+                                      AppRoutes.instance.voucherScreen,
+                                      arguments: item,
+                                    );
+                                  },
+                                );
+                              },
+                            ),
                           ),
                         ],
                       );
@@ -664,40 +664,40 @@ class HomeScreen extends StatelessWidget {
                             height: AppSize.size.height * 0.3,
                             child: controller.isLoading.value
                                 ? ListView.builder(
-                                    scrollDirection: Axis.horizontal,
-                                    itemCount: 5,
-                                    itemBuilder: (context, index) {
-                                      return const HomeCardShimmer();
-                                    },
-                                  )
+                              scrollDirection: Axis.horizontal,
+                              itemCount: 5,
+                              itemBuilder: (context, index) {
+                                return const HomeCardShimmer();
+                              },
+                            )
                                 : AutoScrollRewardCarousel(
-                                    itemCount: controller.promotionList.length,
-                                    itemWidth: AppSize.size.width * 0.8 + 12,
-                                    itemBuilder: (context, index) {
-                                      var item =
-                                          controller.promotionList[index];
-                                      return HomeRewardCard(
-                                        promotion: item,
-                                        onTap: () {
-                                          if (item.source == "admin") {
-                                            AppSnackBar.message(
-                                              "This Promotion is created by Admin",
-                                            );
-                                          } else {
-                                            Get.toNamed(
-                                              AppRoutes
-                                                  .instance
-                                                  .singlePromoAndRewardScreen,
-                                              arguments: {
-                                                "promotion": item,
-                                                "button": false,
-                                              },
-                                            );
-                                          }
+                              itemCount: controller.promotionList.length,
+                              itemWidth: AppSize.size.width * 0.8 + 12,
+                              itemBuilder: (context, index) {
+                                var item =
+                                controller.promotionList[index];
+                                return HomeRewardCard(
+                                  promotion: item,
+                                  onTap: () {
+                                    if (item.source == "admin") {
+                                      AppSnackBar.message(
+                                        "This Promotion is created by Admin",
+                                      );
+                                    } else {
+                                      Get.toNamed(
+                                        AppRoutes
+                                            .instance
+                                            .singlePromoAndRewardScreen,
+                                        arguments: {
+                                          "promotion": item,
+                                          "button": false,
                                         },
                                       );
-                                    },
-                                  ),
+                                    }
+                                  },
+                                );
+                              },
+                            ),
                           ),
                         ],
                       );
@@ -746,45 +746,45 @@ class HomeScreen extends StatelessWidget {
                             height: AppSize.size.height * 0.3,
                             child: controller.isLoading.value
                                 ? ListView.builder(
-                                    scrollDirection: Axis.horizontal,
-                                    itemCount: 5,
-                                    itemBuilder: (context, index) {
-                                      return const HomeCardShimmer();
-                                    },
-                                  )
+                              scrollDirection: Axis.horizontal,
+                              itemCount: 5,
+                              itemBuilder: (context, index) {
+                                return const HomeCardShimmer();
+                              },
+                            )
                                 : ListView.builder(
-                                    scrollDirection: Axis.horizontal,
-                                    itemCount: controller
-                                        .recentViewedPromotionList
-                                        .length,
-                                    itemBuilder: (context, index) {
-                                      final promotion = controller
-                                          .recentViewedPromotionList[index];
-                                      return Padding(
-                                        padding: EdgeInsets.only(right: 12),
-                                        child: HomeRewardCard(
-                                          promotion: promotion,
-                                          onTap: () {
-                                            Get.toNamed(
-                                              AppRoutes
-                                                  .instance
-                                                  .singlePromoAndRewardScreen,
-                                              arguments: {
-                                                "promotion": promotion,
-                                                "button":
-                                                    promotion.isPromotionAdded,
-                                              },
-                                            );
-                                          },
-                                        ),
+                              scrollDirection: Axis.horizontal,
+                              itemCount: controller
+                                  .recentViewedPromotionList
+                                  .length,
+                              itemBuilder: (context, index) {
+                                final promotion = controller
+                                    .recentViewedPromotionList[index];
+                                return Padding(
+                                  padding: EdgeInsets.only(right: 12),
+                                  child: HomeRewardCard(
+                                    promotion: promotion,
+                                    onTap: () {
+                                      Get.toNamed(
+                                        AppRoutes
+                                            .instance
+                                            .singlePromoAndRewardScreen,
+                                        arguments: {
+                                          "promotion": promotion,
+                                          "button":
+                                          promotion.isPromotionAdded,
+                                        },
                                       );
                                     },
                                   ),
+                                );
+                              },
+                            ),
                           ),
                         ],
                       );
                     }),
-                  
+
                   ],
                 ),
               ),
@@ -824,7 +824,7 @@ class HomeShopCard extends StatelessWidget {
         }
       },
       child: Padding(
-        
+
         padding: const EdgeInsets.all(8.0),
         child: Column(
           children: [
@@ -832,7 +832,7 @@ class HomeShopCard extends StatelessWidget {
               width: AppSize.width(value: 48),
               height: AppSize.width(value: 48),
               url:
-                  merchantImage ??
+              merchantImage ??
                   "https://cdn.pixabay.com/photo/2017/03/10/13/57/cooking-2132874_1280.jpg",
             ),
             Gap(height: AppSize.width(value: 8)),
@@ -877,7 +877,7 @@ class HomeShopCategoryCard extends StatelessWidget {
         }
       },
       child: Padding(
-       
+
         padding: const EdgeInsets.all(8.0),
         child: Column(
           children: [
@@ -885,7 +885,7 @@ class HomeShopCategoryCard extends StatelessWidget {
               width: AppSize.width(value: 48),
               height: AppSize.width(value: 48),
               path:
-                  merchantImage ??
+              merchantImage ??
                   "https://cdn.pixabay.com/photo/2017/03/10/13/57/cooking-2132874_1280.jpg",
             ),
             Gap(height: AppSize.width(value: 8)),

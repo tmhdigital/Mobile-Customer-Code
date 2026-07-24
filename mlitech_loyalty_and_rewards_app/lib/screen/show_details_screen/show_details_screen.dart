@@ -59,7 +59,7 @@ class ShowDetailsScreen extends StatelessWidget {
                       borderRadius: 0,
                       fit: BoxFit.fitWidth,
                       url:
-                          "${AppApiEndPoint.domain}${controller.merchantDetails.value?.merchant?.photo}",
+                      AppApiEndPoint.mediaUrl(controller.merchantDetails.value?.merchant?.photo),
                       // width: double.infinity,
                       height: AppSize.size.height * 0.28,
                     ),
@@ -81,7 +81,7 @@ class ShowDetailsScreen extends StatelessWidget {
                               width: AppSize.width(value: 48),
                               height: AppSize.width(value: 48),
                               url:
-                                  "${AppApiEndPoint.domain}${controller.merchantDetails.value?.merchant?.profile}",
+                              AppApiEndPoint.mediaUrl(controller.merchantDetails.value?.merchant?.profile),
                             ),
                             Expanded(
                               child: Column(
@@ -90,11 +90,11 @@ class ShowDetailsScreen extends StatelessWidget {
                                 children: [
                                   AppText(
                                     data:
-                                        controller
-                                            .merchantDetails
-                                            .value
-                                            ?.merchant
-                                            ?.businessName ??
+                                    controller
+                                        .merchantDetails
+                                        .value
+                                        ?.merchant
+                                        ?.businessName ??
                                         "Loading...",
                                     fontSize: AppSize.width(value: 18),
                                     fontWeight: FontWeight.w700,
@@ -111,11 +111,11 @@ class ShowDetailsScreen extends StatelessWidget {
                                       Expanded(
                                         child: AppText(
                                           data:
-                                              controller
-                                                  .merchantDetails
-                                                  .value
-                                                  ?.merchant
-                                                  ?.address ??
+                                          controller
+                                              .merchantDetails
+                                              .value
+                                              ?.merchant
+                                              ?.address ??
                                               "Loading...",
                                           fontSize: AppSize.width(value: 12),
                                           maxLines: 2,
@@ -152,10 +152,10 @@ class ShowDetailsScreen extends StatelessWidget {
                             Column(
                               children: [
                                 if (controller
-                                        .merchantDetails
-                                        .value
-                                        ?.merchant
-                                        ?.digitalCardId !=
+                                    .merchantDetails
+                                    .value
+                                    ?.merchant
+                                    ?.digitalCardId !=
                                     "............")
                                   AppButton(
                                     onTap: () {
@@ -222,24 +222,24 @@ class ShowDetailsScreen extends StatelessWidget {
                                   ),
                                 Gap(height: AppSize.width(value: 8)),
                                 if (controller
-                                        .merchantDetails
-                                        .value
-                                        ?.merchant
-                                        ?.digitalCardId ==
+                                    .merchantDetails
+                                    .value
+                                    ?.merchant
+                                    ?.digitalCardId ==
                                     "")
                                   Obx(() {
                                     return controller
-                                            .isLoadingAddCardForWallet
-                                            .value
+                                        .isLoadingAddCardForWallet
+                                        .value
                                         ? CircularProgressIndicator()
                                         : AppButton(
-                                            onTap: () {
-                                              controller.addCardForWallet();
-                                            },
-                                            height: AppSize.width(value: 32),
-                                            width: AppSize.width(value: 88),
-                                            title: "Add Card",
-                                          );
+                                      onTap: () {
+                                        controller.addCardForWallet();
+                                      },
+                                      height: AppSize.width(value: 32),
+                                      width: AppSize.width(value: 88),
+                                      title: "Add Card",
+                                    );
                                   }),
                               ],
                             ),
@@ -260,14 +260,14 @@ class ShowDetailsScreen extends StatelessWidget {
                               children: [
                                 AppText(
                                   data:
-                                      "Your Tier: ${controller.merchantTiar.value?.tierName ?? "Not set"}",
+                                  "Your Tier: ${controller.merchantTiar.value?.tierName ?? "Not set"}",
                                   fontSize: AppSize.width(value: 14),
                                   color: color.text2,
                                 ),
                                 Gap(height: 8),
                                 AppText(
                                   data:
-                                      "Points: ${controller.merchantTiar.value?.availablePoints?.toStringAsFixed(2) ?? 0}",
+                                  "Points: ${controller.merchantTiar.value?.availablePoints?.toStringAsFixed(2) ?? 0}",
                                   fontSize: AppSize.width(value: 18),
                                   fontWeight: FontWeight.w700,
                                   color: color.text2,
@@ -289,11 +289,11 @@ class ShowDetailsScreen extends StatelessWidget {
                         Gap(height: 8),
                         AppText(
                           data:
-                              controller
-                                  .merchantDetails
-                                  .value
-                                  ?.merchant
-                                  ?.about ??
+                          controller
+                              .merchantDetails
+                              .value
+                              ?.merchant
+                              ?.about ??
                               "",
                           fontSize: AppSize.width(value: 12),
                           height: 1.7,
@@ -304,10 +304,10 @@ class ShowDetailsScreen extends StatelessWidget {
 
                         /// Promotions
                         if (controller
-                                .merchantDetails
-                                .value
-                                ?.promotions
-                                .isNotEmpty ??
+                            .merchantDetails
+                            .value
+                            ?.promotions
+                            .isNotEmpty ??
                             false)
                           AppText(
                             data: "Available Special Promotions",
@@ -319,10 +319,10 @@ class ShowDetailsScreen extends StatelessWidget {
                         Gap(height: 12),
 
                         if (controller
-                                .merchantDetails
-                                .value
-                                ?.promotions
-                                .isNotEmpty ??
+                            .merchantDetails
+                            .value
+                            ?.promotions
+                            .isNotEmpty ??
                             false)
                           ListView.builder(
                             shrinkWrap: true,
@@ -343,7 +343,7 @@ class ShowDetailsScreen extends StatelessWidget {
                                   return PostDetailsItemCard(
                                     show: promotion?.buy ?? false,
                                     isLoading:
-                                        controller.loadingPromotionId.value ==
+                                    controller.loadingPromotionId.value ==
                                         promotion?.id,
                                     promotion: Promotion(
                                       id: promotion?.id,
@@ -353,7 +353,7 @@ class ShowDetailsScreen extends StatelessWidget {
                                       startDate: promotion?.startDate,
                                       endDate: promotion?.endDate,
                                       discountPercentage:
-                                          promotion?.discountPercentage,
+                                      promotion?.discountPercentage,
                                     ),
 
                                     onTap: () {
@@ -452,7 +452,7 @@ class PostDetailsItemCard extends StatelessWidget {
                   ),
                   AppText(
                     data:
-                        "Expire On ${dateFormetterForPromotion(promotion?.endDate)}",
+                    "Expire On ${dateFormetterForPromotion(promotion?.endDate)}",
                     fontSize: AppSize.width(value: 14),
                     fontWeight: FontWeight.w500,
                     color: Colors.black,
@@ -462,17 +462,17 @@ class PostDetailsItemCard extends StatelessWidget {
                       alignment: Alignment.bottomRight,
                       child: isLoading
                           ? Padding(
-                              padding: EdgeInsets.only(
-                                right: AppSize.width(value: 12.0),
-                              ),
-                              child: CircularProgressIndicator(),
-                            )
+                        padding: EdgeInsets.only(
+                          right: AppSize.width(value: 12.0),
+                        ),
+                        child: CircularProgressIndicator(),
+                      )
                           : AppButton(
-                              onTap: onTap,
-                              height: AppSize.width(value: 32),
-                              width: AppSize.width(value: 135),
-                              title: "Add To Wallet",
-                            ),
+                        onTap: onTap,
+                        height: AppSize.width(value: 32),
+                        width: AppSize.width(value: 135),
+                        title: "Add To Wallet",
+                      ),
                     ),
                 ],
               ),
