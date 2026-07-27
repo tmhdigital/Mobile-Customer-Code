@@ -15,10 +15,12 @@ class NetworkErrorHandler {
     if (error is SocketException) return true;
     if (error is TimeoutException) return true;
     if (error is DioException) {
+      // Sirf asli connection failures ko "no internet" mano.
+      // receiveTimeout/sendTimeout ka matlab server slow hai, internet nahi gaya,
+      // is liye in par offline screen nahi dikhani. Warna slow-but-successful
+      // signup (OTP already gayi hoti hai) galti se "No Internet" dikha deta tha.
       return error.type == DioExceptionType.connectionError ||
-          error.type == DioExceptionType.connectionTimeout ||
-          error.type == DioExceptionType.sendTimeout ||
-          error.type == DioExceptionType.receiveTimeout;
+          error.type == DioExceptionType.connectionTimeout;
     }
     return false;
   }
