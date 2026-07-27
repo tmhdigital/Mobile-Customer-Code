@@ -233,6 +233,20 @@ class ProfileScreen extends StatelessWidget {
                       ),
                       ProfileRow(
                         appThemeColor: appThemeColor,
+                        iconPath: AssetsPath.icPrivicyPolicy,
+                        onTap: () {
+                          Get.toNamed(
+                            AppRoutes.instance.privicyScreen,
+                            arguments: {
+                              "name": "User Manual",
+                              "endpoint": "customer-user-manual",
+                            },
+                          );
+                        },
+                        text: "User Manual",
+                      ),
+                      ProfileRow(
+                        appThemeColor: appThemeColor,
                         iconPath: AssetsPath.icFeedBack,
                         onTap: () {
                           AppSnackBar.message("Not Implement Yet");

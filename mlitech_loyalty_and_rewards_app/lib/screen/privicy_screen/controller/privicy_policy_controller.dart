@@ -1,5 +1,6 @@
 import 'package:get/get.dart';
 import 'package:loyalty_customer/const/privacy_policy_content.dart';
+import 'package:loyalty_customer/const/user_manual_content.dart';
 import 'package:loyalty_customer/service/repository/get_repository.dart';
 import 'package:loyalty_customer/widget/app_log/app_print.dart';
 
@@ -7,6 +8,7 @@ class PrivicyPolicyController extends GetxController {
   GetRepository getRepository = GetRepository.instance;
 
   static const String _privacyPolicyEndpoint = "customer-privacy-policy";
+  static const String _userManualEndpoint = "customer-user-manual";
 
   String? privacy;
   String? content;
@@ -19,6 +21,14 @@ class PrivicyPolicyController extends GetxController {
     // for other rules (e.g. Terms & Conditions).
     if (privacy == _privacyPolicyEndpoint) {
       content = kPrivacyPolicyHtml;
+      return;
+    }
+
+    // The User Manual is a bundled reference document, so it is served
+    // from static content rather than the CMS-driven endpoint, matching
+    // how the Privacy Policy is handled above.
+    if (privacy == _userManualEndpoint) {
+      content = kUserManualHtml;
       return;
     }
 
