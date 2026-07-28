@@ -72,7 +72,16 @@ const String kUserManualHtml = '''
 <p>Use the search bar on the gift card list to quickly find a specific card.</p>
 <h2>6.3 Transaction History</h2>
 <p>Every purchase, points-earning event, and redemption is recorded in Transaction History, giving you a full audit trail of your loyalty activity.</p>
-<h1>7. Redeeming Points</h1>
+<h1>7. Earning & Redeeming Points</h1>
+<h3>7.1 Earning Points</h3>
+<p>Earn loyalty points every time you make an eligible purchase from a participating business and unlock greater rewards as your loyalty grows:</p>
+<ul>
+<li>Visit a participating merchant and purchase an eligible product or service. You will receive loyalty points based on the earning percentage associated with your current loyalty tier for that business.</li>
+<li>Continue visiting and transacting with the same merchant to accumulate loyalty points. As your points increase, you may qualify for higher loyalty tiers, allowing you to earn points at higher rates on future purchases.</li>
+<li>Each loyalty point earned has a redemption value of PKR 10, which can be redeemed in accordance with the business redemption policy.</li>
+<li>To maintain your current loyalty tier, you should make at least one eligible purchase with the business every six months. If no qualifying transaction is recorded during this period, your loyalty tier may be downgraded, resulting in a lower points earning rate for future purchases.</li>
+</ul>
+<h3>7.2 Redeeming Points</h3>
 <p>When you want to use your points at checkout (in-store), you approve a redemption request from your app:</p>
 <ul>
 <li>From the Wallet or the merchant's checkout (New Sale) flow, choose Redeem Points.</li>
