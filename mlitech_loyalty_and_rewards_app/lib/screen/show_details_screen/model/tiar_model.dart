@@ -13,22 +13,30 @@ class TiarModel {
         this.data,
     });
 
-    factory TiarModel.fromRawJson(String str) => TiarModel.fromJson(json.decode(str));
+    factory TiarModel.fromRawJson(String str) =>
+        TiarModel.fromJson(json.decode(str));
 
     String toRawJson() => json.encode(toJson());
 
     factory TiarModel.fromJson(Map<String, dynamic> json) => TiarModel(
         success: json["success"],
         message: json["message"],
-        pagination: json["pagination"] == null ? null : Pagination.fromJson(json["pagination"]),
-        data: json["data"] == null ? [] : List<TiarDataModel>.from(json["data"]!.map((x) => TiarDataModel.fromJson(x))),
+        pagination: json["pagination"] == null
+            ? null
+            : Pagination.fromJson(json["pagination"]),
+        data: json["data"] == null
+            ? []
+            : List<TiarDataModel>.from(
+            json["data"]!.map((x) => TiarDataModel.fromJson(x))),
     );
 
     Map<String, dynamic> toJson() => {
         "success": success,
         "message": message,
         "pagination": pagination?.toJson(),
-        "data": data == null ? [] : List<dynamic>.from(data!.map((x) => x.toJson())),
+        "data": data == null
+            ? []
+            : List<dynamic>.from(data!.map((x) => x.toJson())),
     };
 }
 
@@ -36,7 +44,13 @@ class TiarDataModel {
     String? id;
     String? name;
     int? pointsThreshold;
-    String? reward;
+
+    // Backend returns `reward` as a Number (schema: { type: Number, default: 0 }),
+    // so it must be parsed as a number, not a String. Parsing it as String was
+    // throwing a type error and making the whole tier list fail to load, which
+    // hid the "View Point & Tiers" button.
+    num? reward;
+
     int? accumulationRule;
     int? redemptionRule;
     int? minTotalSpend;
@@ -59,22 +73,27 @@ class TiarDataModel {
         this.updatedAt,
     });
 
-    factory TiarDataModel.fromRawJson(String str) => TiarDataModel.fromJson(json.decode(str));
+    factory TiarDataModel.fromRawJson(String str) =>
+        TiarDataModel.fromJson(json.decode(str));
 
     String toRawJson() => json.encode(toJson());
 
     factory TiarDataModel.fromJson(Map<String, dynamic> json) => TiarDataModel(
-        id: json["_id"],
-        name: json["name"],
-        pointsThreshold: json["pointsThreshold"],
-        reward: json["reward"],
-        accumulationRule: json["accumulationRule"],
-        redemptionRule: json["redemptionRule"],
-        minTotalSpend: json["minTotalSpend"],
+        id: json["_id"]?.toString(),
+        name: json["name"]?.toString(),
+        pointsThreshold: _toInt(json["pointsThreshold"]),
+        reward: _toNum(json["reward"]),
+        accumulationRule: _toInt(json["accumulationRule"]),
+        redemptionRule: _toInt(json["redemptionRule"]),
+        minTotalSpend: _toInt(json["minTotalSpend"]),
         isActive: json["isActive"],
-        admin: json["admin"],
-        createdAt: json["createdAt"] == null ? null : DateTime.parse(json["createdAt"]),
-        updatedAt: json["updatedAt"] == null ? null : DateTime.parse(json["updatedAt"]),
+        admin: json["admin"]?.toString(),
+        createdAt: json["createdAt"] == null
+            ? null
+            : DateTime.tryParse(json["createdAt"].toString()),
+        updatedAt: json["updatedAt"] == null
+            ? null
+            : DateTime.tryParse(json["updatedAt"].toString()),
     );
 
     Map<String, dynamic> toJson() => {
@@ -92,6 +111,24 @@ class TiarDataModel {
     };
 }
 
+/// Safely converts a dynamic JSON value (int, double, or numeric String)
+/// into an int, without throwing. Returns null if it cannot be parsed.
+int? _toInt(dynamic value) {
+    if (value == null) return null;
+    if (value is int) return value;
+    if (value is double) return value.toInt();
+    if (value is num) return value.toInt();
+    return int.tryParse(value.toString());
+}
+
+/// Safely converts a dynamic JSON value (int, double, or numeric String)
+/// into a num, without throwing. Returns null if it cannot be parsed.
+num? _toNum(dynamic value) {
+    if (value == null) return null;
+    if (value is num) return value;
+    return num.tryParse(value.toString());
+}
+
 class Pagination {
     int? total;
     int? limit;
@@ -105,15 +142,16 @@ class Pagination {
         this.totalPage,
     });
 
-    factory Pagination.fromRawJson(String str) => Pagination.fromJson(json.decode(str));
+    factory Pagination.fromRawJson(String str) =>
+        Pagination.fromJson(json.decode(str));
 
     String toRawJson() => json.encode(toJson());
 
     factory Pagination.fromJson(Map<String, dynamic> json) => Pagination(
-        total: json["total"],
-        limit: json["limit"],
-        page: json["page"],
-        totalPage: json["totalPage"],
+        total: _toInt(json["total"]),
+        limit: _toInt(json["limit"]),
+        page: _toInt(json["page"]),
+        totalPage: _toInt(json["totalPage"]),
     );
 
     Map<String, dynamic> toJson() => {
