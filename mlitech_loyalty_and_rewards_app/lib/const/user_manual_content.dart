@@ -2,26 +2,12 @@
 /// "Rewaldo Customer App User Manual" document for the Rewaldo Customer
 /// Application. Rendered as HTML via flutter_html.
 const String kUserManualHtml = '''
-<p><strong>REWALDO</strong></p>
-<p>Loyalty &amp; Rewards Platform</p>
-<p><strong>Customer App</strong></p>
+<h3><strong>REWALDO</strong></h3>
+<h4>Loyalty &amp; Rewards Platform</h4>
+<h3><strong>Customer App</strong></h3>
 <p>A complete guide to earning, redeeming, and enjoying your rewards on the Rewaldo mobile customer application.</p>
-<p><strong>Mobile Customer Application</strong></p>
-<p>User Manual</p>
-<p>Version 1.0</p>
-<p><strong>Table of Contents</strong></p>
-<p><strong>1. Introduction</strong></p>
-<p><strong>2. Getting Started</strong></p>
-<p><strong>3. Getting Around the App</strong></p>
-<p><strong>4. Home Screen</strong></p>
-<p><strong>5. Discovering Merchants</strong></p>
-<p><strong>6. My Wallet</strong></p>
-<p><strong>7. Redeeming Points</strong></p>
-<p><strong>8. Special Promotions</strong></p>
-<p><strong>9. Referral Program</strong></p>
-<p><strong>10. Notifications</strong></p>
-<p><strong>11. Managing Your Profile</strong></p>
-<p><strong>12. Troubleshooting &amp; Support</strong></p>
+<h3><strong>Mobile Customer Application</strong></h3>
+<p><strong>User Manual: </strong>Version 1.0</p>
 <h1>1. Introduction</h1>
 <p>The Rewaldo Customer App is the mobile application that lets shoppers join their favourite retailers' loyalty programs, earn points on every purchase, redeem rewards, collect gift cards and vouchers, and discover promotions from merchants near them. This manual explains every screen and feature available to a customer, from creating an account to redeeming a reward at checkout.</p>
 <h1>2. Getting Started</h1>
