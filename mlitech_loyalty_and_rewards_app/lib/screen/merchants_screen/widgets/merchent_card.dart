@@ -78,7 +78,9 @@ class MerchantCard extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             AppText(
-                              data: merchant?.businessName ?? "N/A",
+                              data: merchant?.displayName.isNotEmpty == true
+                                  ? merchant!.displayName
+                                  : "N/A",
                               fontSize: AppSize.width(value: 18),
                               fontWeight: FontWeight.w700,
                               color: Colors.black,

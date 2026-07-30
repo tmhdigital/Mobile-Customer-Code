@@ -179,6 +179,15 @@ class AllMerchantModelData {
         // ✅ SAFE DOUBLE
         rating: double.tryParse(json["rating"]?.toString() ?? "0") ?? 0.0,
       );
+
+  /// Display name for merchant listings: prefers the registered business
+  /// name and falls back to firstName for older records without one.
+  String get displayName {
+    if (businessName != null && businessName!.trim().isNotEmpty) {
+      return businessName!.trim();
+    }
+    return firstName ?? "";
+  }
 }
 
 class AccountInformation {

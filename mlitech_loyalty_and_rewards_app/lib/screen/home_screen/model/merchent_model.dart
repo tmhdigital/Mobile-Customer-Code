@@ -33,6 +33,7 @@ class MerchantModelData {
     int? totalRatings;
     double? avgRating;
     String? firstName;
+    String? businessName;
     String? email;
     String? profile;
 
@@ -41,6 +42,7 @@ class MerchantModelData {
         this.totalRatings,
         this.avgRating,
         this.firstName,
+        this.businessName,
         this.email,
         this.profile,
     });
@@ -54,6 +56,7 @@ class MerchantModelData {
         totalRatings: json["totalRatings"],
         avgRating: json["avgRating"]?.toDouble(),
         firstName: json["firstName"],
+        businessName: json["businessName"],
         email: json["email"],
         profile: json["profile"],
     );
@@ -63,9 +66,19 @@ class MerchantModelData {
         "totalRatings": totalRatings,
         "avgRating": avgRating,
         "firstName": firstName,
+        "businessName": businessName,
         "email": email,
         "profile": profile,
     };
+
+    /// Display name for merchant listings: prefers the registered business
+    /// name and falls back to firstName for older records without one.
+    String get displayName {
+        if (businessName != null && businessName!.trim().isNotEmpty) {
+            return businessName!.trim();
+        }
+        return firstName ?? "";
+    }
 }
 
 

@@ -3,7 +3,6 @@ import 'package:get/get.dart';
 import 'package:loyalty_customer/const/app_api_end_point.dart';
 import 'package:loyalty_customer/const/app_color.dart';
 import 'package:loyalty_customer/const/app_theme_color.dart';
-import 'package:loyalty_customer/const/assets_icons_path.dart';
 import 'package:loyalty_customer/routes/app_routes.dart';
 import 'package:loyalty_customer/screen/app_navigation_screen/controller/navigation_screen_controller.dart';
 import 'package:loyalty_customer/screen/app_navigation_screen/navigation_tab.dart';
@@ -14,7 +13,6 @@ import 'package:loyalty_customer/screen/home_screen/widget/home_map_preview.dart
 import 'package:loyalty_customer/screen/home_screen/widget/home_reward_card.dart';
 import 'package:loyalty_customer/screen/home_screen/widget/shimmer/home_name_shimmer_item.dart';
 import 'package:loyalty_customer/utils/app_size.dart';
-import 'package:loyalty_customer/widget/app_image/app_image.dart';
 import 'package:loyalty_customer/widget/app_image/app_image_circular.dart';
 import 'package:loyalty_customer/widget/app_log/app_print.dart';
 import 'package:loyalty_customer/widget/app_log/gap.dart';
@@ -46,12 +44,39 @@ class HomeScreen extends StatelessWidget {
               return Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  AppText(
-                    data:
-                    "Hello ${controller.profileController.profileData.value?.firstName ?? "Loading..."}",
-                    fontSize: AppSize.width(value: 18),
-                    fontWeight: FontWeight.w700,
-                    color: appThemeColor.text2,
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Flexible(
+                        child: AppText(
+                          data:
+                          "Hello ${controller.profileController.profileData.value?.firstName ?? "Loading..."}",
+                          fontSize: AppSize.width(value: 18),
+                          fontWeight: FontWeight.w700,
+                          color: appThemeColor.text2,
+                          maxLines: 1,
+                        ),
+                      ),
+                      if (controller.subSummaryList.value?.subscriptionTitles.isNotEmpty == true) ...[
+                        Gap(width: 8),
+                        Container(
+                          padding: EdgeInsets.symmetric(
+                            horizontal: AppSize.width(value: 8),
+                            vertical: AppSize.width(value: 3),
+                          ),
+                          decoration: BoxDecoration(
+                            color: appThemeColor.icon.withValues(alpha: 0.12),
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                          child: AppText(
+                            data: controller.subSummaryList.value!.subscriptionTitles.last,
+                            fontSize: AppSize.width(value: 10),
+                            fontWeight: FontWeight.w600,
+                            color: appThemeColor.icon,
+                          ),
+                        ),
+                      ],
+                    ],
                   ),
                   Gap(height: 12),
                   SizedBox(
@@ -163,134 +188,6 @@ class HomeScreen extends StatelessWidget {
                   spacing: AppSize.size.height * 0.01,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Obx(() {
-                      return Container(
-                        decoration: BoxDecoration(
-                          border: Border.all(color: appThemeColor.icon),
-                          borderRadius: BorderRadius.circular(
-                            AppSize.width(value: 8),
-                          ),
-                          color: appThemeColor.cart,
-                        ),
-                        padding: EdgeInsets.all(16),
-                        child: Column(
-                          spacing: AppSize.width(value: 8),
-                          children: [
-                            AppImage(
-                              path: AssetsPath.icSubShow,
-                              width: AppSize.width(value: 46),
-                            ),
-
-                            controller
-                                .subSummaryList
-                                .value
-                                ?.subscriptionTitles
-                                .isNotEmpty ==
-                                true
-                                ? AppText(
-                              data:
-                              controller
-                                  .subSummaryList
-                                  .value
-                                  ?.subscriptionTitles
-                                  .last ??
-                                  "Gold Membership",
-                              fontSize: AppSize.width(value: 16),
-                              fontWeight: FontWeight.w700,
-                              color: Colors.black,
-                            )
-                                : AppText(
-                              data: "No Subscription",
-                              fontSize: AppSize.width(value: 16),
-                              fontWeight: FontWeight.w700,
-                              color: Colors.black,
-                            ),
-
-                            Container(
-                              width: AppSize.size.width * 0.98,
-                              height: 2,
-                              decoration: BoxDecoration(
-                                color: appThemeColor.icon1.withValues(
-                                  alpha: 0.4,
-                                ),
-                                borderRadius: BorderRadius.circular(
-                                  AppSize.width(value: 12),
-                                ),
-                              ),
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                AppText(
-                                  data: "totalSpent",
-                                  fontSize: AppSize.width(value: 12),
-                                  fontWeight: FontWeight.w400,
-                                  color: Colors.black,
-                                ),
-                                AppText(
-                                  data:
-                                  controller
-                                      .subSummaryList
-                                      .value
-                                      ?.totalSpent
-                                      .toString() ??
-                                      "0",
-                                  fontSize: AppSize.width(value: 12),
-                                  fontWeight: FontWeight.w400,
-                                  color: Colors.black,
-                                ),
-                              ],
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                AppText(
-                                  data: "totalDigitalCards",
-                                  fontSize: AppSize.width(value: 12),
-                                  fontWeight: FontWeight.w400,
-                                  color: Colors.black,
-                                ),
-                                AppText(
-                                  data:
-                                  controller
-                                      .subSummaryList
-                                      .value
-                                      ?.totalDigitalCards
-                                      .toString() ??
-                                      "0",
-                                  fontSize: AppSize.width(value: 12),
-                                  fontWeight: FontWeight.w400,
-                                  color: Colors.black,
-                                ),
-                              ],
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                AppText(
-                                  data: "totalPromotions",
-                                  fontSize: AppSize.width(value: 12),
-                                  fontWeight: FontWeight.w400,
-                                  color: Colors.black,
-                                ),
-                                AppText(
-                                  data:
-                                  controller
-                                      .subSummaryList
-                                      .value
-                                      ?.totalPromotions
-                                      .toString() ??
-                                      "0",
-                                  fontSize: AppSize.width(value: 12),
-                                  fontWeight: FontWeight.w400,
-                                  color: Colors.black,
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                      );
-                    }),
                     AppText(
                       data: "Explore Shop on the Map",
                       fontSize: AppSize.width(value: 18),
@@ -526,7 +423,7 @@ class HomeScreen extends StatelessWidget {
                                         arguments: merchant.id,
                                       );
                                     },
-                                    title: merchant.firstName ?? "",
+                                    title: merchant.displayName,
                                     merchantImage:
                                     AppApiEndPoint.mediaUrl(merchant.profile ?? ""),
                                     appThemeColor: appThemeColor,
