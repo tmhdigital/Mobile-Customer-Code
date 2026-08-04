@@ -56,6 +56,7 @@ const String kUserManualHtml = '''
 <li>Use Search Merchants to find a specific store by name, or scroll the list of nearby merchants.</li>
 <li>Tap a merchant to open its details page.</li>
 <li>Use specific filters to search out specific merchants with location, distance, favourite merchants and Services.</li>
+<li>The customer can view merchant's points and tier details and transaction history from merchant details screen.</li>
 </ul>
 <h2>5.2 Merchant Details</h2>
 <p>The merchant details screen shows the store's description, address, contact information, active promotions, and a map location. From here you can view directions on the map details screen. User can view all information though merchant website.</p>

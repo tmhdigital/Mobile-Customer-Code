@@ -43,10 +43,6 @@ class _CountryCityDropdownState extends State<CountryCityDropdown> {
   List<String> cities = [];
 
   final Map<String, List<String>> countryCityData = const {
-    "Bahrain": ["Manama"],
-    "Bangladesh": ["Dhaka"],
-    "Kuwait": ["Kuwait City"],
-    "Oman": ["Muscat"],
     "Pakistan": [
       "Islamabad",
       "Karachi",
@@ -54,24 +50,6 @@ class _CountryCityDropdownState extends State<CountryCityDropdown> {
       "Peshawar",
       "Quetta",
       "Rawalpindi",
-    ],
-    "Qatar": ["Doha"],
-    "Saudi Arabia": ["Jeddah", "Riyadh"],
-    "United Arab Emirates": [
-      "Abu Dhabi",
-      "Ajman",
-      "Dubai",
-      "Fujairah",
-      "Ras Al Khaimah",
-      "Sharjah",
-      "Umm Al Quwain",
-    ],
-    "United Kingdom": [
-      "Birmingham",
-      "Glasgow",
-      "Liverpool",
-      "London",
-      "Manchester",
     ],
   };
 

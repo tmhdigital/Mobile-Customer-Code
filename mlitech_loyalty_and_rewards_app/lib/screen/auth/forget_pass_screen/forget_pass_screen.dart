@@ -78,18 +78,8 @@ class ForgetPassScreen extends StatelessWidget {
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(30),
                           ),
-                          allowedCountryCodes: [
-                            "PK",
-                            "AE",
-                            "OM",
-                            "QA",
-                            "KW",
-                            "BH",
-                            "SA",
-                            "BD",
-                            "GB",
-                          ], // Multiple countries
-                          defaultCountryCode: "PK", // Bangladesh default
+                          allowedCountryCodes: ["PK"],
+                          defaultCountryCode: "PK",
                           fillColor: Colors.grey[100],
                           borderRadius: 10,
                           isOptional: false,

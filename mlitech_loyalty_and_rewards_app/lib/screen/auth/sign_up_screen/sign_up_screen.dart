@@ -100,17 +100,7 @@ class SignUpScreen extends StatelessWidget {
                             EmailAndPhoneField(
                               controller: controller.phoneController,
                               alwaysPhone: true, // শুধু phone field দেখাবে
-                              allowedCountryCodes: [
-                                "PK",
-                                "AE",
-                                "OM",
-                                "QA",
-                                "KW",
-                                "BH",
-                                "SA",
-                                "BD",
-                                "GB",
-                              ],
+                              allowedCountryCodes: ["PK"],
                               defaultCountryCode: 'PK',
                               fillColor: Colors.grey[100],
                               borderRadius: 24,
