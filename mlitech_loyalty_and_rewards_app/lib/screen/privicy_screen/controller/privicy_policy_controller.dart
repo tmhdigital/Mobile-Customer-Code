@@ -1,5 +1,6 @@
 import 'package:get/get.dart';
 import 'package:loyalty_customer/const/privacy_policy_content.dart';
+import 'package:loyalty_customer/const/terms_and_conditions_content.dart';
 import 'package:loyalty_customer/const/user_manual_content.dart';
 import 'package:loyalty_customer/service/repository/get_repository.dart';
 import 'package:loyalty_customer/widget/app_log/app_print.dart';
@@ -8,6 +9,8 @@ class PrivicyPolicyController extends GetxController {
   GetRepository getRepository = GetRepository.instance;
 
   static const String _privacyPolicyEndpoint = "customer-privacy-policy";
+  static const String _termsAndConditionsEndpoint =
+      "customer-terms-and-conditions";
   static const String _userManualEndpoint = "customer-user-manual";
 
   String? privacy;
@@ -21,6 +24,14 @@ class PrivicyPolicyController extends GetxController {
     // for other rules (e.g. Terms & Conditions).
     if (privacy == _privacyPolicyEndpoint) {
       content = kPrivacyPolicyHtml;
+      return;
+    }
+
+    // The Terms & Conditions are a legal document, so they are always
+    // served from the bundled static content, matching how the Privacy
+    // Policy is handled above.
+    if (privacy == _termsAndConditionsEndpoint) {
+      content = kTermsAndConditionsHtml;
       return;
     }
 
