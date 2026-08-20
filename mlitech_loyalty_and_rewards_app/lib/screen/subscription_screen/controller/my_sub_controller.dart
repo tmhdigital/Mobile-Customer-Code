@@ -83,6 +83,31 @@ class MySubController extends GetxController {
   }
 
   void salesRep({required String packageId}) async {
+    final customerId = profileValue.value?.id;
+
+    if (customerId != null && customerId.isNotEmpty) {
+      final latestRequest = await _getRepository.getLatestSalesRepRequest(
+        customerId: customerId,
+      );
+
+      if (latestRequest != null && _wasCreatedToday(latestRequest['createdAt'])) {
+        final subscriptionStatus = latestRequest['subscriptionStatus']?.toString();
+
+        if (subscriptionStatus == 'active') {
+          // Already upgraded once today — backend silently ignores a second
+          // request on the same day, so block it here with a clear message.
+          AppSnackBar.error("You cannot upgrade your plan twice in a day.");
+        } else {
+          // Previous request today is still awaiting sales-rep approval.
+          AppSnackBar.message(
+            "You already have a pending upgrade request awaiting approval.",
+          );
+          Get.toNamed(AppRoutes.instance.waitingScreen);
+        }
+        return;
+      }
+    }
+
     final response = await _postRepository.salesRep(packageId: packageId);
     if (response) {
       Get.toNamed(AppRoutes.instance.waitingScreen);
@@ -91,6 +116,13 @@ class MySubController extends GetxController {
     } else {
       AppSnackBar.error("Failed to add Sales Rep");
     }
+  }
+
+  bool _wasCreatedToday(dynamic createdAt) {
+    final date = DateTime.tryParse(createdAt?.toString() ?? '')?.toLocal();
+    if (date == null) return false;
+    final now = DateTime.now();
+    return date.year == now.year && date.month == now.month && date.day == now.day;
   }
 
   // -------------- Subscription payment with WebView --------------
