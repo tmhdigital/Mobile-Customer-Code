@@ -316,8 +316,9 @@ class MySubController extends GetxController {
     AppPrint.appLog('🎉 Kuickpay Payment Success Detected: $url');
 
     isPaymentLoading.value = true;
+    bool activated = false;
     try {
-      final activated = await _confirmKuickpayPayment(uri.queryParameters);
+      activated = await _confirmKuickpayPayment(uri.queryParameters);
 
       // Whether or not the confirm call succeeded, pull fresh data so the
       // membership + home screens never show stale "No Subscription".
@@ -333,7 +334,11 @@ class MySubController extends GetxController {
       isPaymentLoading.value = false;
     }
 
-    _showSuccessDialog();
+    if (activated) {
+      _showSuccessDialog();
+    } else {
+      Get.back();
+    }
   }
 
   /// Confirm with our backend, then poll briefly in case activation is coming
@@ -364,7 +369,7 @@ class MySubController extends GetxController {
     }
 
     // Fallback: give the IPN a few seconds to land.
-    for (var attempt = 0; attempt < 4; attempt++) {
+    for (var attempt = 0; attempt < 8; attempt++) {
       await Future.delayed(const Duration(seconds: 2));
       final polled = await _getRepository.getKuickpayOrderStatus(
         orderId: orderId,
@@ -415,30 +420,7 @@ class MySubController extends GetxController {
       _showSuccessDialog();
     }
   }
-  // void _checkConnectionSuccess(String url) {
-  //   // Prevent multiple dialogs
-  //   if (_dialogShown.value) return;
-
-  //   // Check for success patterns in URL
-  //   // Stripe typically redirects back after successful payment
-  //   final uri = Uri.tryParse(url);
-  //   if (uri != null) {
-  //     // Check if URL contains success or return parameters from Stripe
-  //     final hasSuccess =
-  //         uri.path.contains('/success') ||
-  //         uri.queryParameters.containsKey('success');
-  //     final hasReturn =
-  //         uri.path.contains('/return') ||
-  //         uri.queryParameters.containsKey('return');
-
-  //     if (hasSuccess || hasReturn) {
-  //       _dialogShown.value = true;
-
-  //       _showSuccessDialog();
-  //     }
-  //   }
-  // }
-
+  
   /// Show success dialog
   void _showSuccessDialog() {
     Get.offAllNamed(AppRoutes.instance.confirmScreen);
