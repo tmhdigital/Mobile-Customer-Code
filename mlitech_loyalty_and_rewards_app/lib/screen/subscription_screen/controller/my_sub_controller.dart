@@ -467,8 +467,9 @@ class MySubController extends GetxController {
       return false;
     }
 
-    // 👉 Free plan can only ever be used once
-    if (profileValue.value?.hasUsedFreePlan == true && price == 0) {
+    // 👉 Free plan is only for users who've never had ANY subscription before
+    // (paid or free) — not just users who've already used a free plan.
+    if (price == 0 && (profileValue.value?.totalSubscriptions ?? 0) > 0) {
       return false;
     }
 
