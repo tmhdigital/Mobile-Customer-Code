@@ -132,31 +132,33 @@ class MySubScreen extends StatelessWidget {
                                     width: AppSize.width(value: 62),
                                   ),
 
-                                  // Title
-                                  AppText(
-                                    data: "Choose Payment Method",
-                                    fontSize: AppSize.width(value: 20),
-                                    fontWeight: FontWeight.w600,
-                                    color: Colors.black,
-                                  ),
+                                  // Title + subtitle only make sense when the
+                                  // user has to pick a payment method — a free
+                                  // trial has nothing to choose, so skip them.
+                                  if (!package.isFreeTrial) ...[
+                                    AppText(
+                                      data: "Choose Payment Method",
+                                      fontSize: AppSize.width(value: 20),
+                                      fontWeight: FontWeight.w600,
+                                      color: Colors.black,
+                                    ),
 
-                                  AppText(
-                                    textAlign: TextAlign.center,
-                                    data:
-                                    "Select your preferred option to complete the transaction.",
-                                    fontSize: AppSize.width(value: 16),
-                                    fontWeight: FontWeight.w500,
-                                    color: Colors.black,
-                                  ),
+                                    AppText(
+                                      textAlign: TextAlign.center,
+                                      maxLines: 2,
+                                      data:
+                                      "Select your preferred option to complete the transaction.",
+                                      fontSize: AppSize.width(value: 16),
+                                      fontWeight: FontWeight.w500,
+                                      color: Colors.black,
+                                    ),
+                                  ],
 
                                   package.isFreeTrial
                                       ? AppButton(
                                           onTap: () async {
                                             // Close bottom sheet first
                                             Get.back();
-
-                                            // Free plan — activates directly,
-                                            // no payment method needed
                                             await controller.paymentPackage(
                                               packageId: package.id,
                                             );
