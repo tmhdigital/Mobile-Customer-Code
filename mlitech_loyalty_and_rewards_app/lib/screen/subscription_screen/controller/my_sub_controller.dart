@@ -138,19 +138,22 @@ class MySubController extends GetxController {
       if (response != null &&
           response.success == true &&
           response.data?.url != null) {
+        // Paid plan — Stripe checkout
         final url = response.data!.url!;
         stripeUrl.value = url;
         _initializeWebView(url);
         AppPrint.appLog("✅ Payment package URL received: $url");
-      } else {
-        AppSnackBar.success("You are already subscribed");
-
-        Get.offAllNamed(
-          AppRoutes.instance.navigationScreen,
-        ); // this logic implementing by mahabub
-
-        // _showErrorSnackbar('Failed to get checkout URL');
+      } else if (response != null && response.success == true) {
+        // Free plan — activated directly, no checkout redirect involved
+        await _refreshAfterPayment();
+        AppSnackBar.success(
+          response.message ?? "Your free plan has been activated!",
+        );
+        Get.offAllNamed(AppRoutes.instance.navigationScreen);
       }
+      // response == null means the request failed (e.g. free plan already
+      // used, or a network error) — apiPostServices already surfaces that
+      // message itself, so there's nothing further to show here.
     } catch (e) {
       _showErrorSnackbar('An error occurred: $e');
       AppPrint.appError(e, title: "Payment Package Error");

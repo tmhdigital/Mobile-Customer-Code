@@ -149,7 +149,22 @@ class MySubScreen extends StatelessWidget {
                                     color: Colors.black,
                                   ),
 
-                                  Row(
+                                  package.isFreeTrial
+                                      ? AppButton(
+                                          onTap: () async {
+                                            // Close bottom sheet first
+                                            Get.back();
+
+                                            // Free plan — activates directly,
+                                            // no payment method needed
+                                            await controller.paymentPackage(
+                                              packageId: package.id,
+                                            );
+                                          },
+                                          height: AppSize.width(value: 42),
+                                          title: "Start Free Trial",
+                                        )
+                                      : Row(
                                     children: [
                                       Expanded(
                                         child: InkWell(
