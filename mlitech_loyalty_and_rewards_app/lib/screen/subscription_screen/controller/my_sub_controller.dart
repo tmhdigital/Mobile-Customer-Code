@@ -440,22 +440,26 @@ class MySubController extends GetxController {
     }
   }
 
-  /// Package ids the user currently holds an ACTIVE subscription for.
-  Set<String> get _activePackageIds {
+  /// Active (not-yet-expired) subscriptions, keyed by package id.
+  Map<String, Subscription> get _activeSubscriptionsByPackageId {
     final subs = profileValue.value?.subscriptions ?? [];
-    return subs
-        .where((sub) {
-      if ((sub.status ?? '').toLowerCase() != 'active') return false;
+    final result = <String, Subscription>{};
+    for (final sub in subs) {
+      if ((sub.status ?? '').toLowerCase() != 'active') continue;
       final end = DateTime.tryParse(sub.endDate ?? '');
-      if (end != null && end.isBefore(DateTime.now())) return false;
-      return (sub.packageId ?? '').isNotEmpty;
-    })
-        .map((sub) => sub.packageId!)
-        .toSet();
+      if (end != null && end.isBefore(DateTime.now())) continue;
+      final packageId = sub.packageId;
+      if (packageId == null || packageId.isEmpty) continue;
+      result[packageId] = sub;
+    }
+    return result;
   }
 
-  /// true  -> show "Choose Plan" (user can buy this package)
-  /// false -> show "Claimed"    (already subscribed / not available)
+  /// Days left below which a claimed plan's button re-enables for renewal.
+  static const int _renewalWindowDays = 15;
+
+  /// true  -> show "Choose Plan" (user can buy/renew this package)
+  /// false -> show "Claimed"    (already subscribed and not close to expiry)
   ///
   /// Previously this was driven by the card's list index and by matching plan
   /// TITLES, which meant a freshly bought package still rendered as buyable.
@@ -463,8 +467,22 @@ class MySubController extends GetxController {
   /// back from /user/profile.
   bool isPlanClaimed(num? price, String? value, int index, {String? packageId}) {
     // 👉 Already subscribed to this exact package
-    if (packageId != null && _activePackageIds.contains(packageId)) {
-      return false;
+    if (packageId != null) {
+      final activeSub = _activeSubscriptionsByPackageId[packageId];
+      if (activeSub != null) {
+        // Re-enable the button once a PAID plan is close to expiring, so the
+        // user can renew instead of waiting for it to lapse first. Free
+        // plans don't get this — there's nothing to renew them into.
+        final isPaidPlan = price != null && price > 0;
+        if (isPaidPlan) {
+          final end = DateTime.tryParse(activeSub.endDate ?? '');
+          final remainingDays = end?.difference(DateTime.now()).inDays;
+          if (remainingDays != null && remainingDays <= _renewalWindowDays) {
+            return true;
+          }
+        }
+        return false;
+      }
     }
 
     // 👉 Free plan is only for users who've never had ANY subscription before
