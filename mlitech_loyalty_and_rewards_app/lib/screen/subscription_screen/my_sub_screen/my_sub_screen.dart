@@ -4,6 +4,7 @@ import 'package:loyalty_customer/const/app_color.dart';
 import 'package:loyalty_customer/const/assets_icons_path.dart';
 import 'package:loyalty_customer/routes/app_routes.dart';
 import 'package:loyalty_customer/screen/subscription_screen/controller/my_sub_controller.dart';
+import 'package:loyalty_customer/screen/subscription_screen/model/package_list_model.dart';
 import 'package:loyalty_customer/utils/app_size.dart';
 import 'package:loyalty_customer/widget/app_button/app_button.dart';
 import 'package:loyalty_customer/widget/app_image/app_image.dart';
@@ -102,139 +103,14 @@ class MySubScreen extends StatelessWidget {
                         packageId: package.id,
                       ),
                       onTap: () {
-                        Get.bottomSheet(
-                          Container(
-                            padding: EdgeInsets.all(24),
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.only(
-                                topLeft: Radius.circular(16),
-                                topRight: Radius.circular(16),
-                              ),
-                              color: Colors.white,
-                            ),
-                            child: Container(
-                              padding: EdgeInsets.all(24),
-                              decoration: BoxDecoration(
-                                color: AppColor.buttonDark.withValues(
-                                  alpha: 0.1,
-                                ),
-                                /* Stoke */
-                                borderRadius: BorderRadius.circular(16),
-                                border: Border.all(color: AppColor.button5Dark),
-                              ),
-                              child: Column(
-                                spacing: AppSize.size.height * 0.02,
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  // Lock Icon
-                                  AppImage(
-                                    path: AssetsPath.paymentOption,
-                                    width: AppSize.width(value: 62),
-                                  ),
-
-                                  // Title + subtitle only make sense when the
-                                  // user has to pick a payment method — a free
-                                  // trial has nothing to choose, so skip them.
-                                  if (!package.isFreeTrial) ...[
-                                    AppText(
-                                      data: "Choose Payment Method",
-                                      fontSize: AppSize.width(value: 20),
-                                      fontWeight: FontWeight.w600,
-                                      color: Colors.black,
-                                    ),
-
-                                    AppText(
-                                      textAlign: TextAlign.center,
-                                      maxLines: 2,
-                                      data:
-                                      "Select your preferred option to complete the transaction.",
-                                      fontSize: AppSize.width(value: 16),
-                                      fontWeight: FontWeight.w500,
-                                      color: Colors.black,
-                                    ),
-                                  ],
-
-                                  package.isFreeTrial
-                                      ? AppButton(
-                                          onTap: () async {
-                                            // Close bottom sheet first
-                                            Get.back();
-                                            await controller.paymentPackage(
-                                              packageId: package.id,
-                                            );
-                                          },
-                                          height: AppSize.width(value: 42),
-                                          title: "Start Free Trial",
-                                        )
-                                      : Row(
-                                    children: [
-                                      Expanded(
-                                        child: InkWell(
-                                          onTap: () {
-                                            controller.salesRep(
-                                              packageId: package.id,
-                                            );
-                                          },
-                                          child: Container(
-                                            padding: EdgeInsets.symmetric(
-                                              horizontal: AppSize.width(
-                                                value: 12,
-                                              ),
-                                              vertical: AppSize.width(
-                                                value: 10,
-                                              ),
-                                            ),
-                                            decoration: BoxDecoration(
-                                              borderRadius:
-                                              BorderRadius.circular(12),
-                                              border: Border.all(
-                                                color: AppColor.buttonDark,
-                                              ),
-                                            ),
-                                            child: Center(
-                                              child: AppText(
-                                                data: "Sales Agent",
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                      Gap(width: AppSize.width(value: 8)),
-                                      Expanded(
-                                        child: AppButton(
-                                          onTap: () async {
-                                            // Close bottom sheet first
-                                            Get.back();
-
-                                            // Initialize Kuickpay checkout (local payment method)
-                                            await controller.paymentPackageKuickpay(
-                                              packageId: package.id,
-                                            );
-
-                                            // Navigate to WebView screen once it's ready
-                                            if (controller.webViewController !=
-                                                null) {
-                                              Get.toNamed(
-                                                AppRoutes
-                                                    .instance
-                                                    .kuickpayCheckoutWebView,
-                                              );
-                                            }
-                                          },
-                                          height: AppSize.width(value: 42),
-                                          title: "Online Payment",
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                          backgroundColor: Colors.white,
-                          isDismissible: true,
-                          enableDrag: true,
-                        );
+                        // Downgrading away from a higher-value active plan
+                        // needs an explicit confirmation first; upgrading (or
+                        // no active plan) goes straight to payment as before.
+                        if (controller.isDowngrade(package.price)) {
+                          _showDowngradeConfirmation(controller, package);
+                        } else {
+                          _showPaymentMethodSheet(controller, package);
+                        }
                       },
                     ),
                   );
@@ -246,6 +122,210 @@ class MySubScreen extends StatelessWidget {
       },
     );
   }
+}
+
+void _showPaymentMethodSheet(MySubController controller, PackageModel package) {
+  Get.bottomSheet(
+    Container(
+      padding: EdgeInsets.all(24),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(16),
+          topRight: Radius.circular(16),
+        ),
+        color: Colors.white,
+      ),
+      child: Container(
+        padding: EdgeInsets.all(24),
+        decoration: BoxDecoration(
+          color: AppColor.buttonDark.withValues(
+            alpha: 0.1,
+          ),
+          /* Stoke */
+          borderRadius: BorderRadius.circular(16),
+          border: Border.all(color: AppColor.button5Dark),
+        ),
+        child: Column(
+          spacing: AppSize.size.height * 0.02,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            // Lock Icon
+            AppImage(
+              path: AssetsPath.paymentOption,
+              width: AppSize.width(value: 62),
+            ),
+
+            // Title + subtitle only make sense when the
+            // user has to pick a payment method — a free
+            // trial has nothing to choose, so skip them.
+            if (!package.isFreeTrial) ...[
+              AppText(
+                data: "Choose Payment Method",
+                fontSize: AppSize.width(value: 20),
+                fontWeight: FontWeight.w600,
+                color: Colors.black,
+              ),
+
+              AppText(
+                textAlign: TextAlign.center,
+                maxLines: 2,
+                data:
+                "Select your preferred option to complete the transaction.",
+                fontSize: AppSize.width(value: 16),
+                fontWeight: FontWeight.w500,
+                color: Colors.black,
+              ),
+            ],
+
+            package.isFreeTrial
+                ? AppButton(
+                    onTap: () async {
+                      // Close bottom sheet first
+                      Get.back();
+                      await controller.paymentPackage(
+                        packageId: package.id,
+                      );
+                    },
+                    height: AppSize.width(value: 42),
+                    title: "Start Free Trial",
+                  )
+                : Row(
+              children: [
+                Expanded(
+                  child: InkWell(
+                    onTap: () {
+                      controller.salesRep(
+                        packageId: package.id,
+                      );
+                    },
+                    child: Container(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: AppSize.width(
+                          value: 12,
+                        ),
+                        vertical: AppSize.width(
+                          value: 10,
+                        ),
+                      ),
+                      decoration: BoxDecoration(
+                        borderRadius:
+                        BorderRadius.circular(12),
+                        border: Border.all(
+                          color: AppColor.buttonDark,
+                        ),
+                      ),
+                      child: Center(
+                        child: AppText(
+                          data: "Sales Agent",
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                Gap(width: AppSize.width(value: 8)),
+                Expanded(
+                  child: AppButton(
+                    onTap: () async {
+                      // Close bottom sheet first
+                      Get.back();
+
+                      // Initialize Kuickpay checkout (local payment method)
+                      await controller.paymentPackageKuickpay(
+                        packageId: package.id,
+                      );
+
+                      // Navigate to WebView screen once it's ready
+                      if (controller.webViewController !=
+                          null) {
+                        Get.toNamed(
+                          AppRoutes
+                              .instance
+                              .kuickpayCheckoutWebView,
+                        );
+                      }
+                    },
+                    height: AppSize.width(value: 42),
+                    title: "Online Payment",
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    ),
+    backgroundColor: Colors.white,
+    isDismissible: true,
+    enableDrag: true,
+  );
+}
+
+/// Shown before [_showPaymentMethodSheet] when the tapped package is cheaper
+/// than a plan the user currently has active — buying it would carry the
+/// remaining time of the better plan forward onto a lower-value one.
+void _showDowngradeConfirmation(MySubController controller, PackageModel package) {
+  Get.dialog(
+    Dialog(
+      backgroundColor: Colors.white,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+      child: Padding(
+        padding: EdgeInsets.all(24),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          spacing: AppSize.size.height * 0.02,
+          children: [
+            AppText(
+              textAlign: TextAlign.center,
+              data: "Switch to a Lower Plan?",
+              fontSize: AppSize.width(value: 18),
+              fontWeight: FontWeight.w700,
+              color: Colors.black,
+            ),
+            AppText(
+              textAlign: TextAlign.center,
+              data:
+              "You currently have a higher membership active. Are you sure you want to switch?",
+              fontSize: AppSize.width(value: 14),
+              fontWeight: FontWeight.w500,
+              color: Colors.black,
+            ),
+            Row(
+              children: [
+                Expanded(
+                  child: InkWell(
+                    onTap: () => Get.back(),
+                    child: Container(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: AppSize.width(value: 12),
+                        vertical: AppSize.width(value: 10),
+                      ),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(12),
+                        border: Border.all(color: AppColor.buttonDark),
+                      ),
+                      child: Center(child: AppText(data: "Cancel")),
+                    ),
+                  ),
+                ),
+                Gap(width: AppSize.width(value: 8)),
+                Expanded(
+                  child: AppButton(
+                    onTap: () {
+                      // Close confirmation, then continue to payment as usual
+                      Get.back();
+                      _showPaymentMethodSheet(controller, package);
+                    },
+                    height: AppSize.width(value: 42),
+                    title: "Yes, Switch",
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    ),
+  );
 }
 
 class SubcriptionCard extends StatelessWidget {

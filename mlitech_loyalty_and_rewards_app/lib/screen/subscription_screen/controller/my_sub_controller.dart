@@ -458,6 +458,35 @@ class MySubController extends GetxController {
   /// Days left below which a claimed plan's button re-enables for renewal.
   static const int _renewalWindowDays = 15;
 
+  /// Highest price among the user's currently-active subscriptions, looked
+  /// up against packageList since Subscription itself only carries a
+  /// packageId, not a price. Null when the user has no active plan.
+  double? get _currentActivePlanMaxPrice {
+    double? maxPrice;
+    for (final sub in _activeSubscriptionsByPackageId.values) {
+      PackageModel? pkg;
+      for (final p in packageList) {
+        if (p.id == sub.packageId) {
+          pkg = p;
+          break;
+        }
+      }
+      if (pkg == null) continue;
+      if (maxPrice == null || pkg.price > maxPrice) maxPrice = pkg.price;
+    }
+    return maxPrice;
+  }
+
+  /// true when picking [price] would downgrade the user away from a
+  /// higher-value plan they currently hold — used to gate the "are you sure"
+  /// confirmation before showing the payment method sheet.
+  bool isDowngrade(num? price) {
+    if (price == null) return false;
+    final currentMax = _currentActivePlanMaxPrice;
+    if (currentMax == null) return false;
+    return price < currentMax;
+  }
+
   /// true  -> show "Choose Plan" (user can buy/renew this package)
   /// false -> show "Claimed"    (already subscribed and not close to expiry)
   ///
