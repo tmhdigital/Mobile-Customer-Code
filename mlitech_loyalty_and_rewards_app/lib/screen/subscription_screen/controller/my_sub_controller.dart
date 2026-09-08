@@ -4,6 +4,7 @@ import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:loyalty_customer/routes/app_routes.dart';
+import 'package:loyalty_customer/screen/home_screen/controller/home_controller.dart';
 import 'package:loyalty_customer/screen/home_screen/model/subscription_summery_model.dart';
 import 'package:loyalty_customer/screen/profile_section/profile_screen/model/profile_model.dart';
 import 'package:loyalty_customer/screen/subscription_screen/model/package_list_model.dart';
@@ -96,7 +97,7 @@ class MySubController extends GetxController {
         if (subscriptionStatus == 'active') {
           // Already upgraded once today — backend silently ignores a second
           // request on the same day, so block it here with a clear message.
-          AppSnackBar.error("You cannot upgrade your plan twice in a day.");
+          AppSnackBar.error("You cannot upgrade your plan through the sales representative twice in a day.");
         } else {
           // Previous request today is still awaiting sales-rep approval.
           AppSnackBar.message(
@@ -385,6 +386,14 @@ class MySubController extends GetxController {
     return false;
   }
 
+  /// Public entry point so flows outside this controller (e.g. the sales-rep
+  /// waiting screen, once an admin approves the request and the plan
+  /// activates) can trigger the same refresh a payment here would — without
+  /// this, an already-open "My Membership" screen keeps showing stale data
+  /// ("Choose Plan" on a package the user just got approved for) until the
+  /// screen is fully torn down and rebuilt.
+  Future<void> refreshAfterExternalActivation() => _refreshAfterPayment();
+
   /// Re-fetch everything the subscription state is rendered from.
   Future<void> _refreshAfterPayment() async {
     await Future.wait([
@@ -392,6 +401,15 @@ class MySubController extends GetxController {
       getSubSummary(),
       getPackageList(showLoading: false),
     ]);
+
+    // HomeController is a long-lived singleton that only fetches its own
+    // subscription summary once (onInit). Without this, the Home screen's
+    // header badge keeps showing stale data (or nothing, for a first-time
+    // buyer) after a purchase here until the app restarts or the user
+    // manually pulls to refresh Home.
+    if (Get.isRegistered<HomeController>()) {
+      Get.find<HomeController>().getSubSummary();
+    }
   }
 
   /// Check if Stripe checkout was successful

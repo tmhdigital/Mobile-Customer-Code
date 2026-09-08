@@ -2,6 +2,8 @@ import 'dart:async';
 import 'package:get/get.dart';
 import 'package:loyalty_customer/const/app_api_end_point.dart';
 import 'package:loyalty_customer/routes/app_routes.dart';
+import 'package:loyalty_customer/screen/home_screen/controller/home_controller.dart';
+import 'package:loyalty_customer/screen/subscription_screen/controller/my_sub_controller.dart';
 import 'package:loyalty_customer/screen/profile_section/profile_screen/controller/profile_controller.dart';
 import 'package:loyalty_customer/service/api_service/get_storage_services.dart';
 import 'package:loyalty_customer/service/socket_service.dart/socket_service.dart';
@@ -9,7 +11,13 @@ import 'package:loyalty_customer/widget/app_log/app_print.dart';
 
 class WaitingController extends GetxController {
   final SocketService _socketService = SocketService.instance;
-  ProfileController profileController = Get.put(ProfileController());
+  // Reuse the shared instance if registered, else create it — see
+  // navigation_screen_controller.dart for why plain Get.put/Get.find are
+  // both wrong here (the waitingScreen route's own binding, AuthBinding,
+  // never registers ProfileController either).
+  ProfileController profileController = Get.isRegistered<ProfileController>()
+      ? Get.find<ProfileController>()
+      : Get.put(ProfileController());
 
   RxBool isButtonVisible = false.obs;
   Timer? _navigationTimer;
@@ -108,6 +116,20 @@ class WaitingController extends GetxController {
 
   /// 🔹 Handles UI and navigation when socket response is received
   void _actWhenSocketResponseReceived() {
+    // Refresh so the profile's subscriptions list and Home screen's header
+    // badge reflect the newly-activated plan — without this they'd keep
+    // showing stale (pre-activation) data until an app restart.
+    profileController.fetchProfileData();
+    if (Get.isRegistered<HomeController>()) {
+      Get.find<HomeController>().getSubSummary();
+    }
+    // If "My Membership" was already open before this approval came through,
+    // its Claimed/Choose-Plan state was computed from pre-activation data —
+    // refresh it too so it flips to "Claimed" without needing to be reopened.
+    if (Get.isRegistered<MySubController>()) {
+      Get.find<MySubController>().refreshAfterExternalActivation();
+    }
+
     // Show the "Back to Home" button
     isButtonVisible.value = true;
 

@@ -276,7 +276,7 @@ void _showDowngradeConfirmation(MySubController controller, PackageModel package
           children: [
             AppText(
               textAlign: TextAlign.center,
-              data: "Switch to a Lower Plan?",
+              data: "You currently have a higher membership active.",
               fontSize: AppSize.width(value: 18),
               fontWeight: FontWeight.w700,
               color: Colors.black,
@@ -284,7 +284,8 @@ void _showDowngradeConfirmation(MySubController controller, PackageModel package
             AppText(
               textAlign: TextAlign.center,
               data:
-              "You currently have a higher membership active. Are you sure you want to switch?",
+              "Are you sure you want to switch?",
+              maxLines: 2,
               fontSize: AppSize.width(value: 14),
               fontWeight: FontWeight.w500,
               color: Colors.black,
