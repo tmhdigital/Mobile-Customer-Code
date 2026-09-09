@@ -32,12 +32,20 @@ class WaitingController extends GetxController {
 
   /// 🔹 Initialize profile and socket in correct order
   Future<void> _initializeWithProfile() async {
-    // Fetch profile data first
-    await profileController.fetchProfileData();
-    // Wait a bit to ensure profile data is loaded
-    await Future.delayed(Duration(milliseconds: 1000));
+    // MUST be awaited — _initializeSocket() below reads
+    // profileController.profileData.value?.id, which is only populated
+    // once this call finishes. This matches the original working code.
+    //
+    // IMPORTANT: do NOT read the user id from
+    // GetStorageServices.instance.getUID() — that storage key is never
+    // written anywhere in this app (setUID() has no call sites), so it is
+    // always empty and _initializeSocket() would bail out immediately.
+    try {
+      await profileController.fetchProfileData();
+    } catch (e) {
+      AppPrint.appError(e, title: '❌ Profile fetch failed');
+    }
 
-    // Now initialize socket with user ID
     _initializeSocket();
   }
 
@@ -119,15 +127,29 @@ class WaitingController extends GetxController {
     // Refresh so the profile's subscriptions list and Home screen's header
     // badge reflect the newly-activated plan — without this they'd keep
     // showing stale (pre-activation) data until an app restart.
-    profileController.fetchProfileData();
+    // These are best-effort UI refreshes: none of them may block or abort
+    // showing the "Back to Home" button / starting the nav timer below.
+    unawaited(
+      profileController.fetchProfileData().catchError((e, st) {
+        AppPrint.appError(e, title: '❌ Post-activation profile refresh failed');
+      }),
+    );
     if (Get.isRegistered<HomeController>()) {
-      Get.find<HomeController>().getSubSummary();
+      try {
+        Get.find<HomeController>().getSubSummary();
+      } catch (e) {
+        AppPrint.appError(e, title: '❌ Post-activation Home refresh failed');
+      }
     }
     // If "My Membership" was already open before this approval came through,
     // its Claimed/Choose-Plan state was computed from pre-activation data —
     // refresh it too so it flips to "Claimed" without needing to be reopened.
     if (Get.isRegistered<MySubController>()) {
-      Get.find<MySubController>().refreshAfterExternalActivation();
+      unawaited(
+        Get.find<MySubController>().refreshAfterExternalActivation().catchError((e, st) {
+          AppPrint.appError(e, title: '❌ Post-activation MySub refresh failed');
+        }),
+      );
     }
 
     // Show the "Back to Home" button
