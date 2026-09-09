@@ -277,6 +277,7 @@ void _showDowngradeConfirmation(MySubController controller, PackageModel package
             AppText(
               textAlign: TextAlign.center,
               data: "You currently have a higher membership active.",
+              maxLines: 2,
               fontSize: AppSize.width(value: 18),
               fontWeight: FontWeight.w700,
               color: Colors.black,
