@@ -103,11 +103,13 @@ class MySubScreen extends StatelessWidget {
                         packageId: package.id,
                       ),
                       onTap: () {
-                        // Downgrading away from a higher-value active plan
-                        // needs an explicit confirmation first; upgrading (or
-                        // no active plan) goes straight to payment as before.
-                        if (controller.isDowngrade(package.price)) {
-                          _showDowngradeConfirmation(controller, package);
+                        // Once the current plan still has more than the
+                        // renewal window's worth of days left, block
+                        // activating any other plan outright — tier
+                        // (higher/lower) no longer matters here, only
+                        // remaining time on the current plan does.
+                        if (controller.blockNewActivation) {
+                          _showActivePlanBlockedDialog();
                         } else {
                           _showPaymentMethodSheet(controller, package);
                         }
@@ -260,10 +262,10 @@ void _showPaymentMethodSheet(MySubController controller, PackageModel package) {
   );
 }
 
-/// Shown before [_showPaymentMethodSheet] when the tapped package is cheaper
-/// than a plan the user currently has active — buying it would carry the
-/// remaining time of the better plan forward onto a lower-value one.
-void _showDowngradeConfirmation(MySubController controller, PackageModel package) {
+/// Shown instead of [_showPaymentMethodSheet] when the user's current plan
+/// still has more than [MySubController._renewalWindowDays] days left —
+/// activating any plan is blocked entirely until it's closer to expiry.
+void _showActivePlanBlockedDialog() {
   Get.dialog(
     Dialog(
       backgroundColor: Colors.white,
@@ -276,52 +278,16 @@ void _showDowngradeConfirmation(MySubController controller, PackageModel package
           children: [
             AppText(
               textAlign: TextAlign.center,
-              data: "You currently have a higher membership active.",
+              data: "You already have an active membership plan.",
               maxLines: 2,
               fontSize: AppSize.width(value: 18),
-              fontWeight: FontWeight.w700,
+              fontWeight: FontWeight.w600,
               color: Colors.black,
             ),
-            AppText(
-              textAlign: TextAlign.center,
-              data:
-              "Are you sure you want to switch?",
-              maxLines: 2,
-              fontSize: AppSize.width(value: 14),
-              fontWeight: FontWeight.w500,
-              color: Colors.black,
-            ),
-            Row(
-              children: [
-                Expanded(
-                  child: InkWell(
-                    onTap: () => Get.back(),
-                    child: Container(
-                      padding: EdgeInsets.symmetric(
-                        horizontal: AppSize.width(value: 12),
-                        vertical: AppSize.width(value: 10),
-                      ),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(12),
-                        border: Border.all(color: AppColor.buttonDark),
-                      ),
-                      child: Center(child: AppText(data: "Cancel")),
-                    ),
-                  ),
-                ),
-                Gap(width: AppSize.width(value: 8)),
-                Expanded(
-                  child: AppButton(
-                    onTap: () {
-                      // Close confirmation, then continue to payment as usual
-                      Get.back();
-                      _showPaymentMethodSheet(controller, package);
-                    },
-                    height: AppSize.width(value: 42),
-                    title: "Yes, Switch",
-                  ),
-                ),
-              ],
+            AppButton(
+              onTap: () => Get.back(),
+              height: AppSize.width(value: 42),
+              title: "Close",
             ),
           ],
         ),

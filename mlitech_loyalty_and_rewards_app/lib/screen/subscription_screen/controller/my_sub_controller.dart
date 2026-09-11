@@ -473,13 +473,17 @@ class MySubController extends GetxController {
     return result;
   }
 
-  /// Days left below which a claimed plan's button re-enables for renewal.
+  /// Days left on the current plan above which activating ANY other plan is
+  /// blocked outright (see [blockNewActivation]). Tier no longer matters —
+  /// once the current plan drops to this many days or fewer, switching to
+  /// any plan is allowed.
   static const int _renewalWindowDays = 15;
 
-  /// Highest price among the user's currently-active subscriptions, looked
-  /// up against packageList since Subscription itself only carries a
+  /// The user's highest-value currently-active subscription, looked up
+  /// against packageList since Subscription itself only carries a
   /// packageId, not a price. Null when the user has no active plan.
-  double? get _currentActivePlanMaxPrice {
+  Subscription? get _primaryActiveSubscription {
+    Subscription? primary;
     double? maxPrice;
     for (final sub in _activeSubscriptionsByPackageId.values) {
       PackageModel? pkg;
@@ -490,46 +494,37 @@ class MySubController extends GetxController {
         }
       }
       if (pkg == null) continue;
-      if (maxPrice == null || pkg.price > maxPrice) maxPrice = pkg.price;
-    }
-    return maxPrice;
-  }
-
-  /// true when picking [price] would downgrade the user away from a
-  /// higher-value plan they currently hold — used to gate the "are you sure"
-  /// confirmation before showing the payment method sheet.
-  bool isDowngrade(num? price) {
-    if (price == null) return false;
-    final currentMax = _currentActivePlanMaxPrice;
-    if (currentMax == null) return false;
-    return price < currentMax;
-  }
-
-  /// true  -> show "Choose Plan" (user can buy/renew this package)
-  /// false -> show "Claimed"    (already subscribed and not close to expiry)
-  ///
-  /// Previously this was driven by the card's list index and by matching plan
-  /// TITLES, which meant a freshly bought package still rendered as buyable.
-  /// It is now driven by the actual active subscription package ids that come
-  /// back from /user/profile.
-  bool isPlanClaimed(num? price, String? value, int index, {String? packageId}) {
-    // 👉 Already subscribed to this exact package
-    if (packageId != null) {
-      final activeSub = _activeSubscriptionsByPackageId[packageId];
-      if (activeSub != null) {
-        // Re-enable the button once a PAID plan is close to expiring, so the
-        // user can renew instead of waiting for it to lapse first. Free
-        // plans don't get this — there's nothing to renew them into.
-        final isPaidPlan = price != null && price > 0;
-        if (isPaidPlan) {
-          final end = DateTime.tryParse(activeSub.endDate ?? '');
-          final remainingDays = end?.difference(DateTime.now()).inDays;
-          if (remainingDays != null && remainingDays <= _renewalWindowDays) {
-            return true;
-          }
-        }
-        return false;
+      if (maxPrice == null || pkg.price > maxPrice) {
+        maxPrice = pkg.price;
+        primary = sub;
       }
+    }
+    return primary;
+  }
+
+  /// Days left on [_primaryActiveSubscription], or null if the user has no
+  /// active plan.
+  int? get currentPlanRemainingDays {
+    final end = DateTime.tryParse(_primaryActiveSubscription?.endDate ?? '');
+    return end?.difference(DateTime.now()).inDays;
+  }
+
+  /// true -> activating any other plan should be blocked with the "you
+  /// already have an active membership" popup instead of opening the
+  /// payment sheet. Higher/lower tier no longer matters — only how much
+  /// time is left on the current plan does.
+  bool get blockNewActivation {
+    final days = currentPlanRemainingDays;
+    if (days == null) return false;
+    return days > _renewalWindowDays;
+  }
+
+  /// true  -> show "Choose Plan" (user can activate this package)
+  /// false -> show "Claimed"    (this is the package the user currently holds)
+  bool isPlanClaimed(num? price, String? value, int index, {String? packageId}) {
+    // 👉 This exact package is the one currently active — lock its own card.
+    if (packageId != null && _activeSubscriptionsByPackageId.containsKey(packageId)) {
+      return false;
     }
 
     // 👉 Free plan is only for users who've never had ANY subscription before
