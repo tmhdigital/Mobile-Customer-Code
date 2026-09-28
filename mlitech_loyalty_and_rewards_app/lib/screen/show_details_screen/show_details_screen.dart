@@ -216,7 +216,7 @@ class ShowDetailsScreen extends StatelessWidget {
                                     height: AppSize.width(value: 32),
                                     width: AppSize.width(value: 100),
                                     titleSize: AppSize.width(value: 10),
-                                    title: "View Point & Tiers",
+                                    title: "View Points & Tiers",
                                     filColor: color.button,
                                     titleColor: AppColor.button2Dark,
                                   ),
@@ -452,7 +452,7 @@ class PostDetailsItemCard extends StatelessWidget {
                   ),
                   AppText(
                     data:
-                    "Expire On ${dateFormetterForPromotion(promotion?.endDate)}",
+                    "Expires On ${dateFormetterForPromotion(promotion?.endDate)}",
                     fontSize: AppSize.width(value: 14),
                     fontWeight: FontWeight.w500,
                     color: Colors.black,

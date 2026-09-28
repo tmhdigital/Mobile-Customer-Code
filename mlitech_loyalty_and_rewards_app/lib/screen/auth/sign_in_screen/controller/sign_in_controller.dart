@@ -107,7 +107,9 @@ class SignInController extends GetxController {
         );
         return;
       }
-      await postRepository.updateUserProfile(fcmToken: fcmToken);
+      // Always sent on login (another account may have used this device)
+      final ok = await postRepository.updateUserProfile(fcmToken: fcmToken);
+      if (ok) await storage.setSyncedFCMtoken(fcmToken);
       AppPrint.apiResponse(fcmToken, title: "FCM Token Updated correctly");
     } catch (e) {
       AppPrint.appError(e, title: "FCM Update Failed");

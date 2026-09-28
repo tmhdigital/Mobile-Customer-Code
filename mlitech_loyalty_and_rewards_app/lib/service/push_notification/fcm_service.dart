@@ -2,6 +2,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:loyalty_customer/service/api_service/get_storage_services.dart';
 import 'package:loyalty_customer/service/push_notification/notification_service.dart';
+import 'package:loyalty_customer/service/repository/post_repository.dart';
 
 class FCMService {
   static final FirebaseMessaging _firebaseMessaging =
@@ -81,6 +82,29 @@ class FCMService {
   }
 
 
+  /// Sends the FCM token to the backend only when the user is logged in and
+  /// the token differs from the last one sent, so app opens don't hit the API.
+  static Future<void> syncTokenWithBackend() async {
+    try {
+      final storage = GetStorageServices.instance;
+      if (storage.getToken().isEmpty) return; // not logged in
+
+      final token = storage.getFCMtoken();
+      if (token == null || token.isEmpty) return;
+      if (storage.getSyncedFCMtoken() == token) return; // already on backend
+
+      final ok = await PostRepository.instance.updateUserProfile(
+        fcmToken: token,
+      );
+      if (ok) {
+        await storage.setSyncedFCMtoken(token);
+        debugPrint('✅ FCM token synced with backend');
+      }
+    } catch (e) {
+      debugPrint('❌ FCM token sync error: $e');
+    }
+  }
+
   /// Delete FCM token (call on user logout)
   static Future<void> deleteToken() async {
     try {
@@ -98,6 +122,12 @@ class FCMService {
 
     // Background messages (app is minimized, user taps notification)
     FirebaseMessaging.onMessageOpenedApp.listen(_handleMessageOpenedApp);
+
+    // Firebase can rotate the token while the app is running
+    _firebaseMessaging.onTokenRefresh.listen((token) async {
+      await GetStorageServices.instance.setFCMtoken(token);
+      await syncTokenWithBackend();
+    });
   }
 
   /// Image URL from FCM: [notification.android]/[notification.apple] or data keys.

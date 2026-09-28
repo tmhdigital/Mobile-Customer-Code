@@ -85,7 +85,7 @@ class _EnterReffalIdScreenState extends State<EnterReffalIdScreen> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       AppText(
-                        data: "Join Miltech Today!",
+                        data: "Join Rewaldo Today!",
                         fontSize: AppSize.width(value: 34),
                         fontWeight: FontWeight.w700,
                         color: AppColor.button1Light,

@@ -3,6 +3,7 @@ import 'package:flutter/scheduler.dart';
 import 'package:get/get.dart';
 import 'package:loyalty_customer/screen/profile_section/profile_screen/model/profile_model.dart';
 import 'package:loyalty_customer/service/api_service/get_storage_services.dart';
+import 'package:loyalty_customer/service/push_notification/fcm_service.dart';
 import 'package:loyalty_customer/service/repository/delete_repository.dart';
 import 'package:loyalty_customer/service/repository/get_repository.dart';
 import 'package:loyalty_customer/service/repository/post_repository.dart';
@@ -52,18 +53,9 @@ class ProfileController extends GetxController {
     updateFcmToken();
   }
 
+  /// Hits the API only if the token changed since the last successful sync.
   void updateFcmToken() async {
-    final response = await postRepository.updateUserProfile(
-      fcmToken: getStorage.getFCMtoken(),
-    );
-    if (response) {
-      AppPrint.apiResponse(
-        "Update FCM Token Success",
-        title: "token update form profileController",
-      );
-    } else {
-      AppPrint.appError("Update FCM Token Failed", title: "profileController");
-    }
+    await FCMService.syncTokenWithBackend();
   }
 
   void deleteAccount() async {

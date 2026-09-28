@@ -162,7 +162,7 @@ class VerifyOtpScreen extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     AppText(
-                      data: 'If you didn’t receive a code. ',
+                      data: 'Didn’t receive a code?',
                       fontSize: AppSize.width(value: 18),
                     ),
                     Obx(

@@ -34,7 +34,7 @@ class SpecificServiceScreen extends StatelessWidget {
               }
 
               if (controller.specificPromotionList.isEmpty) {
-                return Center(child: AppText(data: "No Promotion available"));
+                return Center(child: AppText(data: "No Promotions available"));
               }
 
               return ListView.builder(

@@ -280,6 +280,7 @@ class ProfileScreen extends StatelessWidget {
                                       AppText(
                                         data:
                                         "Please confirm your password to remove your account.",
+                                        maxLines: 3,
                                         fontSize: AppSize.width(value: 16),
                                         fontWeight: FontWeight.w500,
                                         textAlign: TextAlign.center,
@@ -403,6 +404,7 @@ class LogOutpopUp extends StatelessWidget {
             ),
             AppText(
               data: "Do you want to log out of your profile?",
+              maxLines: 3,
               fontSize: AppSize.width(value: 16),
               fontWeight: FontWeight.w600,
               color: Colors.black,

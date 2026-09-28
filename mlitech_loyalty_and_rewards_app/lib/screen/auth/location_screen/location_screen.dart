@@ -58,7 +58,7 @@ class LocationScreen extends StatelessWidget {
                   ),
                   child: AppText(
                     data:
-                        "Enter your location or allow access to your location to find shop near you.",
+                        "Enter your location or allow access to your location to find shops near you.",
                     textAlign: TextAlign.center,
                     fontSize: AppSize.width(value: 16),
                     fontWeight: FontWeight.w400,
