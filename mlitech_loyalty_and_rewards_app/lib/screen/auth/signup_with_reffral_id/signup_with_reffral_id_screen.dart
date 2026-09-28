@@ -49,8 +49,8 @@ class SignUpWithReffaleIDScreen extends StatelessWidget {
           Padding(
             padding: EdgeInsets.symmetric(horizontal: AppSize.width(value: 20)),
             child: AppText(
-              data:
-                  "Are you signing up with a referral from one of our agents?",
+              data: "Are you signing up with a referral from our agent or your Friend?",
+              maxLines: 2,
               textAlign: TextAlign.center,
               fontSize: AppSize.width(value: 16),
               fontWeight: FontWeight.w400,

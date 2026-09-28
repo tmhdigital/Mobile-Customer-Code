@@ -7,6 +7,7 @@ import 'package:loyalty_customer/service/repository/auth_repository.dart';
 import 'package:loyalty_customer/utils/app_size.dart';
 import 'package:loyalty_customer/widget/app_button/app_button.dart';
 import 'package:loyalty_customer/widget/app_image/app_image.dart';
+import 'package:loyalty_customer/widget/app_image/app_image_circular.dart';
 import 'package:loyalty_customer/widget/app_input/app_input_widget_two.dart';
 import 'package:loyalty_customer/widget/app_log/app_print.dart';
 import 'package:loyalty_customer/widget/app_log/gap.dart';
@@ -104,11 +105,12 @@ class _EnterReffalIdScreenState extends State<EnterReffalIdScreen> {
                   left: 0,
                   right: 0,
                   child: Center(
-                    child: AppText(
-                      data: "Logo",
-                      fontSize: AppSize.width(value: 80),
-                      fontWeight: FontWeight.w600,
-                      color: AppColor.button1Light,
+                    child: SizedBox(
+                      width: 240,
+                      height: 90,
+                      child: AppImageCircular(
+                        path: "assets/images/rewaldo-logo-white.png",
+                      ),
                     ),
                   ),
                 ),
