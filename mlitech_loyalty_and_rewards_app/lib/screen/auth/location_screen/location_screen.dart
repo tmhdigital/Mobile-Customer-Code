@@ -46,6 +46,8 @@ class LocationScreen extends StatelessWidget {
 
                 AppText(
                   data: "Use Current Location",
+                  maxLines: 2,
+                  textAlign: TextAlign.center,
                   fontSize: AppSize.width(value: 30),
                   fontWeight: FontWeight.w700,
                   color: AppColor.button4Dark,
@@ -60,6 +62,7 @@ class LocationScreen extends StatelessWidget {
                     data:
                         "Enter your location or allow access to your location to find shops near you.",
                     textAlign: TextAlign.center,
+                    maxLines: 3,
                     fontSize: AppSize.width(value: 16),
                     fontWeight: FontWeight.w400,
                     color: AppColor.button4Dark,
