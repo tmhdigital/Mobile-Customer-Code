@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:loyalty_customer/const/app_color.dart';
 import 'package:loyalty_customer/const/assets_icons_path.dart';
 import 'package:loyalty_customer/routes/app_routes.dart';
+import 'package:loyalty_customer/service/repository/account_repository.dart';
 import 'package:loyalty_customer/service/repository/auth_repository.dart';
 import 'package:loyalty_customer/utils/app_size.dart';
 import 'package:loyalty_customer/widget/app_button/app_button.dart';
@@ -40,8 +41,22 @@ class _EnterReffalIdScreenState extends State<EnterReffalIdScreen> {
     super.dispose();
   }
 
+  // Opened during Google sign-up: the account already exists, so the
+  // referral is applied to it directly and the flow continues to the phone step.
+  bool get _googleSignUp =>
+      Get.arguments is Map && Get.arguments["googleSignUp"] == true;
+
   void verifyReffalId() async {
     AppPrint.apiResponse("verifyReffalId", title: "verifyReffalId");
+    if (_googleSignUp) {
+      // Backend validates the ID; its error message is shown on failure
+      final applied = await AccountRepository.instance.applyReferral(
+        referralId: reffalIdController.text.trim(),
+      );
+      if (applied) Get.offAllNamed(AppRoutes.instance.addPhoneScreen);
+      return;
+    }
+
     final response = await AuthRepository.instance.referralVerify(
       ref: reffalIdController.text,
     );

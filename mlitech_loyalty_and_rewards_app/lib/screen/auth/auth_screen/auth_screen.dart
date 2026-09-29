@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:loyalty_customer/const/app_color.dart';
@@ -107,6 +109,8 @@ class AuthScreen extends StatelessWidget {
                               ),
                             );
                     }),
+                    // Apple sign-in is iOS only; Android shows Google only
+                    if (Platform.isIOS)
                     GestureDetector(
                       onTap: () {
                         AppSnackBar.message("Not Implemented Yet");

@@ -184,7 +184,8 @@ class PostRepository {
   }) async {
     try {
       Map<String, dynamic> body = {
-        "currentPassword": oldPassword,
+        // Empty when a Google-only account sets its first password
+        if (oldPassword.isNotEmpty) "currentPassword": oldPassword,
         "newPassword": newPassword,
         "confirmPassword": confirmPassword,
       };

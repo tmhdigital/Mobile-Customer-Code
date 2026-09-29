@@ -81,6 +81,11 @@ class AppApiEndPoint {
   final String changePassword = '/auth/change-password';
   final String contactUs = '/contact';
   final String deleteAccount = '/auth/user-delete-account';
+  final String deleteAccountSendOtp = '/auth/delete-account/send-otp';
+  // Google sign-up steps
+  final String phoneSendOtp = '/auth/phone/send-otp';
+  final String phoneVerifyOtp = '/auth/phone/verify';
+  final String referralApply = '/auth/referral/apply';
   ////in app Url/////////////
   final String getProfile = '/user/profile';
   final String updateProfile = '/user';
