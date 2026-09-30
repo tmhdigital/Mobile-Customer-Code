@@ -3,6 +3,7 @@ import 'package:flutter/foundation.dart';
 import 'package:loyalty_customer/service/api_service/get_storage_services.dart';
 import 'package:loyalty_customer/service/push_notification/notification_service.dart';
 import 'package:loyalty_customer/service/repository/post_repository.dart';
+import 'package:loyalty_customer/widget/app_snackbar/app_snack_bar.dart';
 
 class FCMService {
   static final FirebaseMessaging _firebaseMessaging =
@@ -174,10 +175,13 @@ class FCMService {
     debugPrint('Data: ${message.data}');
     debugPrint('Image URL: ${imageUrlFromMessage(message)}');
 
-    // Show local notification when app is in foreground
-    NotificationService.showNotification(
-      localNotificationPayloadFromMessage(message),
+    // App open: in-app snackbar plus the system notification
+    final payload = localNotificationPayloadFromMessage(message);
+    AppSnackBar.notification(
+      title: payload['message'] as String,
+      body: payload['type'] as String,
     );
+    NotificationService.showNotification(payload);
   }
 
   /// Handle notification opened (app was in background)
