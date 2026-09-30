@@ -11,6 +11,7 @@ class AppApiEndPoint {
   static const String apiBaseUrl = String.fromEnvironment(
     'API_BASE_URL',
     defaultValue: 'https://api.rewaldo.com',
+    // defaultValue: 'https://staging-api.rewaldo.com',
   );
 
   /// Defaults to [apiBaseUrl] when not set separately.
