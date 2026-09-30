@@ -56,9 +56,13 @@ class SpecificServiceScreen extends StatelessWidget {
                                       item.id,
                               promotion: item,
                               onTapDetails: () {
+                                // Detail screen reads a map, not the promotion
                                 Get.toNamed(
                                   AppRoutes.instance.singlePromoAndRewardScreen,
-                                  arguments: item,
+                                  arguments: {
+                                    "promotion": item,
+                                    "button": item.isPromotionAdded ?? false,
+                                  },
                                 );
                               },
                               onTap: () {
